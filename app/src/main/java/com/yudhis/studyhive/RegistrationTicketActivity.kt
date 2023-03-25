@@ -3,9 +3,9 @@ package com.yudhis.studyhive
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class ParticipantDetail : AppCompatActivity() {
+class RegistrationTicketActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_participant_detail)
+        setContentView(R.layout.activity_registration_ticket)
     }
 }
