@@ -18,6 +18,27 @@
             android:name=".RegistrationTicket"
             android:exported="false" />
         <activity
+            android:name=".ParticipantDetail"
+            android:exported="false" />
+        <activity
+            android:name=".AccountInfo"
+            android:exported="false" />
+        <activity
+            android:name=".CourseOverview"
+            android:exported="false" />
+        <activity
+            android:name=".LandingPage"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPassword"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".Signup"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
