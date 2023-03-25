@@ -6,24 +6,20 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 
-class SignupActivity : AppCompatActivity() {
+class SignUp2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_sign_up2)
 
-        val buttonSelanjutnya = findViewById<Button>(R.id.bt_selanjutnya)
+        val buttonBuatAkun = findViewById<Button>(R.id.bt_buat_akun)
         val textViewSudahPunyaAkunLogin = findViewById<TextView>(R.id.tv_sudah_punya_akun_login)
-
-        buttonSelanjutnya.setOnClickListener {
-            Intent(this, SignUp2Activity::class.java).also {
-                startActivity(it)
-            }
-        }
 
         textViewSudahPunyaAkunLogin.setOnClickListener {
             Intent(this, LoginActivity::class.java).also {
                 startActivity(it)
             }
         }
+
+        buttonBuatAkun.setOnClickListener {  }
     }
 }

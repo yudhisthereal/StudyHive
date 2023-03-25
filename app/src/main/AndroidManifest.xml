@@ -12,6 +12,9 @@
         android:theme="@style/Theme.StudyHive"
         tools:targetApi="31">
         <activity
+            android:name=".SignUp2Activity"
+            android:exported="true" />
+        <activity
             android:name=".ResetPasswordActivity"
             android:exported="false" />
         <activity
@@ -43,7 +46,7 @@
         </activity>
         <activity
             android:name=".SignupActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
