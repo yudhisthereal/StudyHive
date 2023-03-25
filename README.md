@@ -12,5 +12,5 @@ It was made in Android Studio, if you're interested in playing with it yourself.
 2. Rara
 ### - Programmers
 1. Sadrach
-2. Yudhistira
+2. Yudhis
 
