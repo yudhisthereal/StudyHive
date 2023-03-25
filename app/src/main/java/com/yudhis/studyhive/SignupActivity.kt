@@ -3,12 +3,15 @@ package com.yudhis.studyhive
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 
 class SignupActivity : AppCompatActivity() {
@@ -18,7 +21,6 @@ class SignupActivity : AppCompatActivity() {
 
         val textViewSudahPunyaAkunLogin = "Sudah punya akun? Login"
         val buttonSelanjutnya = findViewById<Button>(R.id.bt_selanjutnya)
-//        val textViewSudahPunyaAkunLogin = findViewById<TextView>(R.id.tv_sudah_punya_akun_login)
 
         buttonSelanjutnya.setOnClickListener {
             Intent(this, SignUp2Activity::class.java).also {
@@ -39,10 +41,21 @@ class SignupActivity : AppCompatActivity() {
         textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
 
-//        textViewSudahPunyaAkunLogin.setOnClickListener {
-//            Intent(this, LoginActivity::class.java).also {
-//                startActivity(it)
-//            }
-//        }
+        val editTextNama = findViewById<EditText>(R.id.et_nama)
+        val editTextTtl  = findViewById<EditText>(R.id.et_ttl)
+        val editTextNotelp = findViewById<EditText>(R.id.et_notelp)
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                buttonSelanjutnya.isEnabled = editTextNama.text.isNotEmpty() &&
+                        editTextTtl.text.isNotEmpty() &&
+                        editTextNotelp.text.isNotEmpty()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        editTextNama.addTextChangedListener(textWatcher)
+        editTextTtl.addTextChangedListener(textWatcher)
+        editTextNotelp.addTextChangedListener(textWatcher)
     }
 }
