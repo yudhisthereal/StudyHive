@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    tools:context=".SignUp2Activity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -17,7 +17,7 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic"/>
 
     <TextView
-        android:id="@+id/tv_daftarakun"
+        android:id="@+id/tv_daftar_akun"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Daftar Akun"
@@ -28,8 +28,8 @@
         android:layout_marginTop="20dp"/>
 
     <EditText
-        android:id="@+id/et_nama"
-        android:hint="Masukkan nama"
+        android:id="@+id/et_alamat"
+        android:hint="Masukkan alamat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,14 +37,14 @@
         android:layout_marginEnd="38dp"
         android:layout_marginStart="38dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_daftarakun"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_daftar_akun"/>
 
     <EditText
-        android:id="@+id/et_tanggal"
-        android:hint="Masukkan tempat tanggal lahir"
+        android:id="@+id/et_email"
+        android:hint="Masukkan email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/et_nama"
+        app:layout_constraintTop_toBottomOf="@id/et_alamat"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="38dp"
@@ -52,11 +52,11 @@
         android:layout_marginEnd="38dp"/>
 
     <EditText
-        android:id="@+id/et_notelp"
+        android:id="@+id/et_pass"
         android:hint="Masukkan nomor telepon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/et_tanggal"
+        app:layout_constraintTop_toBottomOf="@id/et_email"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="38dp"
@@ -64,11 +64,11 @@
         android:layout_marginEnd="38dp"/>
 
     <Button
-        android:id="@+id/bt_selanjutnya"
+        android:id="@+id/bt_buat_akun"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Selanjutnya"
-        app:layout_constraintTop_toBottomOf="@+id/et_notelp"
+        android:text="Buat Akun"
+        app:layout_constraintTop_toBottomOf="@+id/et_pass"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
@@ -78,7 +78,7 @@
         android:text="Sudah punya akun? Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/bt_selanjutnya"
+        app:layout_constraintTop_toBottomOf="@+id/bt_buat_akun"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
