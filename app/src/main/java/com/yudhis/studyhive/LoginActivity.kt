@@ -16,7 +16,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
         val txtSignup = findViewById<TextView>(R.id.txt_signup)
+        val txtForgotPass = findViewById<TextView>(R.id.txt_forgot_pass)
+
         val ss = SpannableString("Belum punya akun? Daftar")
         val clickableSignup : ClickableSpan = object : ClickableSpan(){
             override fun onClick(p0 : View) {
@@ -28,5 +31,11 @@ class LoginActivity : AppCompatActivity() {
         ss.setSpan(StyleSpan(Typeface.BOLD), 18, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         txtSignup.text = ss
         txtSignup.movementMethod = LinkMovementMethod.getInstance()
+
+        txtForgotPass.setOnClickListener{
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        }
+
+
     }
 }

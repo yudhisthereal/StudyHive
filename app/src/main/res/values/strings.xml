@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">StudyHive</string>
+
+    <!-- LOGIN ACTIVITY -->
+    <string name="login_title">Masuk</string>
+    <string name="email_hint">putin@example.org</string>
+    <string name="pass_hint">Password...</string>
+    <string name="forgot_pass">Lupa Password</string>
+    <string name="btn_login">Masuk</string>
+    <string name="btn_login_google">Pakai Akun Google</string>
+    <string name="atau">atau</string>
+    <string name="txt_daftar_akun">Belum punya akun? Daftar</string>
+
+    <!-- FORGOT & RESET PASSWORD ACTIVITY -->
+    <string name="kirim_otp">Reset Password</string>
+    <string name="back_to_login">Kembali ke Menu Masuk</string>
+    <string name="forgotpass_title">Reset Password</string>
 </resources>
