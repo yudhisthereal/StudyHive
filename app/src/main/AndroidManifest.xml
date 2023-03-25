@@ -12,6 +12,9 @@
         android:theme="@style/Theme.StudyHive"
         tools:targetApi="31">
         <activity
+            android:name=".RegistrationTicket"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
