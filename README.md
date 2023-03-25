@@ -1,6 +1,6 @@
 # Study Hive
 
-A mobile app project dedicated for Raion Internship 2023. Feel free to check things out <3 
+A mobile app project dedicated for <b>Raion Internship 2023</b>. Feel free to check things out <3 
 It was made in Android Studio, if you're interested in playing with it yourself.
 
 ## Team members:
