@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
@@ -13,10 +14,12 @@ import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.yudhis.studyhive.databinding.ActivityForgotPasswordBinding
 import com.yudhis.studyhive.databinding.ActivityResetPasswordOtpPopupBinding
+import java.util.*
 
 class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var binding : ActivityForgotPasswordBinding
@@ -45,13 +48,31 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 binding.fieldEmailForgotpass.error = "Email invalid"
             }
             else {
-                //send otp
-                //show otp input field
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.activity_reset_password_otp_popup)
+
+                val textViewOtp = dialog.findViewById<TextView>(R.id.tv_kode_otp)
+                val random = Random()
+
+                val otp = StringBuilder()
+                for (i in 0 until 4) { // mengulangi 4 kali untuk menghasilkan 4 digit kode OTP
+                    otp.append(random.nextInt(10)) // menghasilkan digit acak dari 0 hingga 9
+                }
+
+                val handler = Handler()
+                handler.postDelayed(object : Runnable {
+                    var i = 0
+                    override fun run() {
+                        if (i < otp.length) {
+                            textViewOtp.text = otp.substring(0, i + 1)
+                            i++
+                            handler.postDelayed(this, 500) // menunda tampilan selama 500 milidetik
+                        }
+                    }
+                }, 500)
                 dialog.show()
-                //
             }
         }
+
     }
 }
