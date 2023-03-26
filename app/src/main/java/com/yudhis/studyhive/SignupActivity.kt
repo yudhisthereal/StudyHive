@@ -23,7 +23,6 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        val textViewSudahPunyaAkunLogin = "Sudah punya akun? Login"
         val buttonSelanjutnya = findViewById<Button>(R.id.bt_selanjutnya)
 
         buttonSelanjutnya.setOnClickListener {
@@ -32,6 +31,7 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
+        val textViewSudahPunyaAkunLogin = "Sudah punya akun? Login"
         val spannableString = SpannableString(textViewSudahPunyaAkunLogin)
 
         val clickableSpan = object : ClickableSpan() {

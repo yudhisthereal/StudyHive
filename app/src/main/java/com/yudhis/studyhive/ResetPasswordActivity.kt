@@ -1,8 +1,14 @@
 package com.yudhis.studyhive
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ClickableSpan
+import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import com.yudhis.studyhive.LoginActivity.Companion.ACCOUNT_INFO
 import com.yudhis.studyhive.databinding.ActivityResetPasswordBinding
@@ -14,8 +20,8 @@ class ResetPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityResetPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        binding.fieldConfirmNewpass.setOnFocusChangeListener { view, hasFocus ->
+
+        binding.fieldConfirmNewpass.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus){
                 //check for match
                 val newPass = binding.fieldNewpass.text.toString()
