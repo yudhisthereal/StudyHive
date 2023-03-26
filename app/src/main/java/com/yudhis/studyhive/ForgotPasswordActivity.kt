@@ -15,6 +15,7 @@ import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
 import android.widget.TextView
+import com.yudhis.studyhive.LoginActivity.Companion.ACCOUNT_INFO
 import com.yudhis.studyhive.databinding.ActivityForgotPasswordBinding
 import java.util.*
 
@@ -42,6 +43,9 @@ class ForgotPasswordActivity : AppCompatActivity() {
             else if (!Patterns.EMAIL_ADDRESS.matcher(binding.fieldEmailForgotpass.text).matches()) {
                 binding.fieldEmailForgotpass.error = "Email invalid"
             }
+            else if(!accountExists(binding.fieldEmailForgotpass.text.toString())) {
+                binding.fieldEmailForgotpass.error = "Email ini belum terdaftar"
+            }
             else {
                 //show otp input field
                 val dialog = Dialog(this)
@@ -65,6 +69,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                             handler.postDelayed(this, 500) // menunda tampilan selama 500 milidetik
                         } else {
                             dialog.dismiss() // tutup dialog setelah 4 digit ditampilkan
+                            ACCOUNT_INFO["AccountEmail"] = binding.fieldEmailForgotpass.text.toString()
                             val intent = Intent(this@ForgotPasswordActivity, ResetPasswordActivity::class.java)
                             startActivity(intent) // pindah ke halaman ResetPasswordActivity
                         }
@@ -74,5 +79,26 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 //
             }
         }
+    }
+    private fun accountExists(email : String) : Boolean {
+        val istream = assets.open("users.csv")
+        val reader = istream.bufferedReader()
+        reader.readLine() // discard header
+        var rowStr : String = reader.readLine()
+        var found = false
+        while (rowStr.isNotBlank()) {
+            var record = rowStr.split(",").toMutableList()
+            record[1] = record[1].trim()
+            if (record[1] == email) {
+                found = true
+                break
+            }
+            try {
+                rowStr = reader.readLine()
+            } catch (e : NullPointerException) {
+                break
+            }
+        }
+        return found
     }
 }

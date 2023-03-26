@@ -145,9 +145,9 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             val landingPageIntent = Intent(applicationContext, LandingPageActivity::class.java)
-            startActivity(landingPageIntent)
             ACCOUNT_INFO["UserName"] = user.displayName.toString()
             ACCOUNT_INFO["AccountEmail"] = user.email.toString()
+            startActivity(landingPageIntent)
         }
     }
     private fun googleSignIn(gsc : GoogleSignInClient) {
@@ -166,20 +166,19 @@ class LoginActivity : AppCompatActivity() {
     private fun accountExists(email : String) : Boolean {
         val istream = assets.open("users.csv")
         val reader = istream.bufferedReader()
-        var rowStr : String = reader.readLine()
+        reader.readLine() // discard header
+        var rowStr: String = reader.readLine()
         var found = false
         while (rowStr.isNotBlank()) {
             var record = rowStr.split(",").toMutableList()
-            for (i in record.indices) {
-                record[i] = record[i].trim()
-            }
+            record[1] = record[1].trim()
             if (record[1] == email) {
                 found = true
                 break
             }
             try {
                 rowStr = reader.readLine()
-            } catch (e : NullPointerException) {
+            } catch (e: NullPointerException) {
                 break
             }
         }
