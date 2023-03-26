@@ -11,12 +11,14 @@ import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.TextView
+import com.yudhis.studyhive.databinding.ActivityForgotPasswordBinding
 
 class ForgotPasswordActivity : AppCompatActivity() {
-    private val txtBackToLogin = findViewById<TextView>(R.id.txt_back_to_login)
+    private lateinit var binding : ActivityForgotPasswordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password)
+        binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val ss = SpannableString("Kembali Ke Menu Masuk")
         val clickableSpan : ClickableSpan = object : ClickableSpan(){
             override fun onClick(p0: View) {
@@ -25,7 +27,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         }
         ss.setSpan(clickableSpan, 16, 21, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         ss.setSpan(StyleSpan(Typeface.BOLD), 16, 21, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        txtBackToLogin.text = ss;
-        txtBackToLogin.movementMethod = LinkMovementMethod.getInstance()
+        binding.txtBackToLogin.text = ss;
+        binding.txtBackToLogin.movementMethod = LinkMovementMethod.getInstance()
     }
 }

@@ -20,19 +20,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.yudhis.studyhive.databinding.ActivityMainBinding
 import com.yudhis.studyhive.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var fBaseAuth : FirebaseAuth
-    private lateinit var activityBinding : ActivityLoginBinding
+    private lateinit var binding : ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityBinding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
 //        setContentView(R.layout.activity_login)
-        setContentView(activityBinding.root)
+        setContentView(binding.root)
         val gso : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("421961381611-c33pgbcqcjuvi3r01aqjors21ogsd8rh.apps.googleusercontent.com")
             .requestEmail()
@@ -41,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 //        val txtSignup : TextView = findViewById(R.id.txt_signup)
 //        val txtForgotPass : TextView = findViewById(R.id.txt_forgot_pass)
 //        val btnGoogleLogin : Button = findViewById(R.id.btn_google_login)
-        activityBinding.btnGoogleLogin.setOnClickListener{
+        binding.btnGoogleLogin.setOnClickListener{
             googleSignIn(gsc)
         }
 
@@ -54,10 +53,10 @@ class LoginActivity : AppCompatActivity() {
 
         ss.setSpan(clickableSignup, 18, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         ss.setSpan(StyleSpan(Typeface.BOLD), 18, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        activityBinding.txtSignup.text = ss
-        activityBinding.txtSignup.movementMethod = LinkMovementMethod.getInstance()
+        binding.txtSignup.text = ss
+        binding.txtSignup.movementMethod = LinkMovementMethod.getInstance()
 
-        activityBinding.txtForgotPass.setOnClickListener{
+        binding.txtForgotPass.setOnClickListener{
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
