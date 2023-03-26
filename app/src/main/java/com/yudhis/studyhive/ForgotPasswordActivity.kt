@@ -13,10 +13,10 @@ import android.view.View
 import android.widget.TextView
 
 class ForgotPasswordActivity : AppCompatActivity() {
+    private val txtBackToLogin = findViewById<TextView>(R.id.txt_back_to_login)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
-        val txtBackToLogin = findViewById<TextView>(R.id.txt_back_to_login)
         val ss = SpannableString("Kembali Ke Menu Masuk")
         val clickableSpan : ClickableSpan = object : ClickableSpan(){
             override fun onClick(p0: View) {
