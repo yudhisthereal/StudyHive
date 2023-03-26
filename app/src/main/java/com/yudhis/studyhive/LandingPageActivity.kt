@@ -4,9 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.yudhis.studyhive.LoginActivity.Companion.ACCOUNT_NAME
+import com.yudhis.studyhive.LoginActivity.Companion.ACCOUNT_INFO
 import com.yudhis.studyhive.databinding.ActivityLandingPageBinding
 
 class LandingPageActivity : AppCompatActivity() {
@@ -17,7 +15,7 @@ class LandingPageActivity : AppCompatActivity() {
         binding = ActivityLandingPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.txtUsername.text = intent.getStringExtra(ACCOUNT_NAME)
+        binding.txtUsername.text = ACCOUNT_INFO["UserName"]
 
         binding.btnLogout.setOnClickListener{
             FirebaseAuth.getInstance().signOut()

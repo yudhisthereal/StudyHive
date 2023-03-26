@@ -24,6 +24,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.yudhis.studyhive.databinding.ActivityLoginBinding
+import java.io.InputStream
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,50 +34,71 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-//        setContentView(R.layout.activity_login)
         setContentView(binding.root)
+
+        // Google sign in
         val gso : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("421961381611-c33pgbcqcjuvi3r01aqjors21ogsd8rh.apps.googleusercontent.com")
             .requestEmail()
             .build()
         val gsc : GoogleSignInClient = GoogleSignIn.getClient(this, gso)
-//        val txtSignup : TextView = findViewById(R.id.txt_signup)
-//        val txtForgotPass : TextView = findViewById(R.id.txt_forgot_pass)
-//        val btnGoogleLogin : Button = findViewById(R.id.btn_google_login)
         binding.btnGoogleLogin.setOnClickListener{
             googleSignIn(gsc)
         }
 
+        // make the "Daftar" part of "Belum punya akun? Daftar" clickable
         val ss = SpannableString("Belum punya akun? Daftar")
         val clickableSignup : ClickableSpan = object : ClickableSpan(){
             override fun onClick(p0 : View) {
                 startActivity(Intent(this@LoginActivity, SignupActivity::class.java))
             }
         }
-
         ss.setSpan(clickableSignup, 18, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         ss.setSpan(StyleSpan(Typeface.BOLD), 18, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.txtSignup.text = ss
         binding.txtSignup.movementMethod = LinkMovementMethod.getInstance()
 
+        // forgot password text on click listener
         binding.txtForgotPass.setOnClickListener{
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
+        // regular login handling
         binding.btnLogin.setOnClickListener{
             if (TextUtils.isEmpty(binding.fieldEmail.text)) {
-                Toast.makeText(this, "masukkan email", "1".toInt())
                 binding.fieldEmail.error = "Email harus diisi"
             }
             else if (!Patterns.EMAIL_ADDRESS.matcher(binding.fieldEmail.text).matches()) {
-                Toast.makeText(this, "Email invalid", "1".toInt())
                 binding.fieldEmail.error = "Email invalid"
             }
             else {
-                signIn()
+                //check account existence
+                if (!accountExists(binding.fieldEmail.text.toString()))
+                {
+                    binding.fieldEmail.error = "Email ini belum terdaftar"
+                    return@setOnClickListener
+                }
             }
+
+            if (TextUtils.isEmpty(binding.fieldPass.text)) {
+                binding.fieldPass.error = "Password harus diisi"
+            }
+            else {
+                //get account info
+                val accountInfo : HashMap<String, String> = getUserRecord(assets.open("users.csv"), binding.fieldEmail.text.toString())
+
+                //match password
+                if (accountInfo["UserPassword"] != binding.fieldPass.text.toString()) {
+                    binding.fieldPass.error = "Password salah"
+                }
+                else {
+                    signIn(accountInfo)
+                }
+            }
+
         }
 
+        // initialize firebase authorization
         fBaseAuth = Firebase.auth
     }
     override fun onStart() {
@@ -123,10 +145,9 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             val landingPageIntent = Intent(applicationContext, LandingPageActivity::class.java)
-            landingPageIntent.putExtra(ACCOUNT_NAME, user.displayName)
-            landingPageIntent.putExtra(ACCOUNT_EMAIL, user.email)
-            landingPageIntent.putExtra(ACCOUNT_PHOTO_URL, user.photoUrl)
             startActivity(landingPageIntent)
+            ACCOUNT_INFO["UserName"] = user.displayName.toString()
+            ACCOUNT_INFO["AccountEmail"] = user.email.toString()
         }
     }
     private fun googleSignIn(gsc : GoogleSignInClient) {
@@ -134,15 +155,68 @@ class LoginActivity : AppCompatActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    private fun signIn() {
+    private fun signIn(accountInfo : HashMap<String, String>) {
+        val landingPageIntent = Intent(this, LandingPageActivity::class.java)
+        ACCOUNT_INFO = accountInfo
+        startActivity(landingPageIntent)
+        finish()
         //SIGN IN
     }
+
+    private fun accountExists(email : String) : Boolean {
+        val istream = assets.open("users.csv")
+        val reader = istream.bufferedReader()
+        var rowStr : String = reader.readLine()
+        var found = false
+        while (rowStr.isNotBlank()) {
+            var record = rowStr.split(",").toMutableList()
+            for (i in record.indices) {
+                record[i] = record[i].trim()
+            }
+            if (record[1] == email) {
+                found = true
+                break
+            }
+            try {
+                rowStr = reader.readLine()
+            } catch (e : NullPointerException) {
+                break
+            }
+        }
+        return found
+    }
+    private fun getUserRecord(istream : InputStream, email : String) : HashMap<String, String> {
+        var record : HashMap<String, String> = hashMapOf()
+        val reader = istream.bufferedReader()
+        var header = reader.readLine().split(",").toMutableList()
+        for (i in header.indices) {
+            header[i] = header[i].trim()
+        }
+        var rowStr : String = reader.readLine()
+        while(rowStr.isNotBlank() && rowStr != null) {
+            val currentRecord = rowStr.split(",").toMutableList()
+            currentRecord[1] = currentRecord[1].trim()
+            if (currentRecord[1] == email) {
+                for (i in currentRecord.indices) {
+                    currentRecord[i] = currentRecord[i].trim()
+                }
+                record = header.zip(currentRecord).toMap()  as HashMap<String, String>
+                break
+            }
+            try {
+                rowStr = reader.readLine()
+            } catch (e : NullPointerException) {
+                break
+            }
+        }
+        return record
+    }
+
+
     companion object {
         private const val TAG = "GoogleActivity"
         private const val RC_SIGN_IN = 9001
-        var ACCOUNT_NAME = "Guest"
-        var ACCOUNT_EMAIL = "Email"
-        var ACCOUNT_PHOTO_URL = "NULL"
+        var ACCOUNT_INFO : HashMap<String, String> = hashMapOf()
     }
 
 }

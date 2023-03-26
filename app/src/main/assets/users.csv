@@ -1,0 +1,6 @@
+UserId, UserEmail, UserPassword, UserName, UserPhone, UserAddress, UserBirthday
+0000001, first@email.com, firstpers0n, First Person, 080000000001, Ketapang, 7-11-07
+0000002, second@email.com, secondp3rson, Second Person, 080000000002, Sawojajar, 23-08-05
+0000003, third@email.com, th1rdpers0n, Third Person, 080000000003, Tlogomas, 2-10-04
+0000004, fourth@email.com, 4thPershawn, Fourth Person, 080000000004, Lowokwaru, 17-05-05
+0000005, fifth@email.com, Pentag#n, Fifth Person, 080000000005, Dinoyo, 8-11-07

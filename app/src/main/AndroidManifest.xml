@@ -18,7 +18,7 @@
         <activity
             android:name=".ResetPasswordActivity"
             android:launchMode="singleInstance"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".RegistrationTicketActivity"
             android:exported="false" />
