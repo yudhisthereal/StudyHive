@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.util.Patterns
 import android.view.View
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -58,6 +61,20 @@ class LoginActivity : AppCompatActivity() {
 
         binding.txtForgotPass.setOnClickListener{
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        }
+
+        binding.btnLogin.setOnClickListener{
+            if (TextUtils.isEmpty(binding.fieldEmail.text)) {
+                Toast.makeText(this, "masukkan email", "1".toInt())
+                binding.fieldEmail.error = "Email harus diisi"
+            }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(binding.fieldEmail.text).matches()) {
+                Toast.makeText(this, "Email invalid", "1".toInt())
+                binding.fieldEmail.error = "Email invalid"
+            }
+            else {
+                signIn()
+            }
         }
 
         fBaseAuth = Firebase.auth
@@ -115,6 +132,10 @@ class LoginActivity : AppCompatActivity() {
     private fun googleSignIn(gsc : GoogleSignInClient) {
         val signInIntent = gsc.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    private fun signIn() {
+        //SIGN IN
     }
     companion object {
         private const val TAG = "GoogleActivity"

@@ -12,9 +12,10 @@
     <string name="txt_daftar_akun">Belum punya akun? Daftar</string>
 
     <!-- FORGOT & RESET PASSWORD ACTIVITY -->
-    <string name="kirim_otp">Reset Password</string>
-    <string name="back_to_login">Kembali ke Menu Masuk</string>
     <string name="forgotpass_title">Reset Password</string>
+    <string name="kirim_otp">Kirim OTP</string>
+    <string name="reset_pass">Reset Password</string>
+    <string name="back_to_login">Kembali ke Menu Masuk</string>
 
     <!-- MENU ITEMS -->
     <string name="menu_logout">Keluar</string>
