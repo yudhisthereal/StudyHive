@@ -67,6 +67,10 @@ class ForgotPasswordActivity : AppCompatActivity() {
                             textViewOtp.text = otp.substring(0, i + 1)
                             i++
                             handler.postDelayed(this, 500) // menunda tampilan selama 500 milidetik
+                        } else {
+                            dialog.dismiss() // tutup dialog setelah 4 digit ditampilkan
+                            val intent = Intent(this@ForgotPasswordActivity, ResetPasswordActivity::class.java)
+                            startActivity(intent) // pindah ke halaman ResetPasswordActivity
                         }
                     }
                 }, 500)
