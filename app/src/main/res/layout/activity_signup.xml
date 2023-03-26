@@ -45,7 +45,7 @@
 
     <EditText
         android:id="@+id/et_ttl"
-        android:hint="Masukkan tanggal lahir"
+        android:hint="Pilih tanggal lahir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/et_nama"
@@ -57,7 +57,9 @@
         android:background="@drawable/custom_input"
         android:drawableStart="@drawable/ic_calendar_custom"
         android:drawablePadding="8dp"
-        android:inputType="date"/>
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="true"/>
 
     <EditText
         android:id="@+id/et_notelp"
