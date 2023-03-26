@@ -15,4 +15,10 @@
     <string name="kirim_otp">Reset Password</string>
     <string name="back_to_login">Kembali ke Menu Masuk</string>
     <string name="forgotpass_title">Reset Password</string>
+
+    <!-- MENU ITEMS -->
+    <string name="menu_logout">Keluar</string>
+
+    <!-- LANDING PAGE -->
+    <string name="welcome">Selamat Datang</string>
 </resources>
