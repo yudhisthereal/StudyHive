@@ -4,15 +4,8 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.ClickableSpan
-import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import com.yudhis.studyhive.LoginActivity.Companion.ACCOUNT_INFO
 import com.yudhis.studyhive.databinding.ActivityResetPasswordBinding
-import java.io.*
 
 class ResetPasswordActivity : AppCompatActivity() {
     private lateinit var binding : ActivityResetPasswordBinding
@@ -48,47 +41,16 @@ class ResetPasswordActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             //reset password
-            resetPassword(ACCOUNT_INFO["AccountEmail"].toString(), binding.fieldNewpass.text.toString())
+            resetPassword(newPass = binding.fieldNewpass.text.toString())
             //redirect to login
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
 
-    private fun resetPassword(email : String, newPass : String) {
+    private fun resetPassword(email : String? = null, newPass : String) {
         val toast = Toast.makeText(this, "Password Direset! (TPI BOONG)", 1.toInt())
         toast.show()
-//        val oldFile = File("file:///android_asset/users.csv")
-//        val newFile = File("file:///android_asset/users_temp.csv")
-//
-//        val reader : BufferedReader = oldFile.bufferedReader()
-//        val writer : BufferedWriter = newFile.bufferedWriter()
-//
-//        var rowStr = "hoho" // just so it is not blank
-//        while(rowStr.isNotBlank()) {
-//            try {
-//                rowStr = reader.readLine()
-//            } catch (e : NullPointerException) {
-//                break
-//            }
-//            val record = rowStr.split(",").toMutableList()
-//            val emailFromCsv = record[1].trim()
-//            if (email == emailFromCsv) {
-//                record[2] = newPass
-//                rowStr = "" // empty then refill
-//                for (i in record.indices) {
-//                    rowStr += record[i].toString()
-//                    if (i < record.indices.last) {
-//                        rowStr += ", "
-//                    }
-//                }
-//                continue
-//            }
-//            writer.write(rowStr)
-//            writer.newLine()
-//        }
-//
-//        newFile.renameTo(oldFile)
     }
 
     private fun getRow(key : String) {
