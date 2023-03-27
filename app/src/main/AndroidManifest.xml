@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-<uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,13 +14,16 @@
         android:theme="@style/Theme.StudyHive"
         tools:targetApi="31">
         <activity
-            android:name=".SignUp2Activity"
-            android:launchMode="singleTop"
+            android:name=".SignUpCourseActivity"
             android:exported="true" />
         <activity
+            android:name=".SignUp2Activity"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ResetPasswordActivity"
-            android:launchMode="singleInstance"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".RegistrationTicketActivity"
             android:exported="false" />
@@ -30,18 +35,18 @@
             android:exported="false" />
         <activity
             android:name=".CourseOverviewActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".LandingPageActivity"
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:launchMode="singleInstance"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".LoginActivity"
-            android:launchMode="singleInstance"
-            android:exported="true" >
+            android:exported="true"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,8 +55,8 @@
         </activity>
         <activity
             android:name=".SignupActivity"
-            android:launchMode="singleInstance"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>
