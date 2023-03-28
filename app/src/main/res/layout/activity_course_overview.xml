@@ -132,14 +132,15 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.fragment.app.FragmentContainerView
+    <FrameLayout
         android:layout_width="345dp"
-        android:layout_height="200dp"
-        android:id="@+id/fragment"
+        android:layout_height="300dp"
+        android:id="@+id/flfragment"
         app:layout_constraintTop_toBottomOf="@id/cv2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        tools:layout="@layout/fragment_detail"/>
 
     
 <!--    <TextView-->
