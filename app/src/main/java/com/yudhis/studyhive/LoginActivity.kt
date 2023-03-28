@@ -22,11 +22,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yudhis.studyhive.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 
+    private val db = Firebase.firestore
     private lateinit var auth : FirebaseAuth
     private lateinit var binding : ActivityLoginBinding
     private lateinit var gsc : GoogleSignInClient

@@ -15,17 +15,21 @@ import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
 import android.widget.TextView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.yudhis.studyhive.databinding.ActivityForgotPasswordBinding
 import java.util.*
 
 class ForgotPasswordActivity : AppCompatActivity() {
+    private val db = Firebase.firestore
     private lateinit var binding : ActivityForgotPasswordBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val ss = SpannableString("Kembali Ke Menu Masuk")
-        val clickableSpan : ClickableSpan = object : ClickableSpan(){
+        val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 startActivity(Intent(this@ForgotPasswordActivity, LoginActivity::class.java))
             }
@@ -35,17 +39,14 @@ class ForgotPasswordActivity : AppCompatActivity() {
         binding.txtBackToLogin.text = ss
         binding.txtBackToLogin.movementMethod = LinkMovementMethod.getInstance()
 
-        binding.btnSendOtp.setOnClickListener{
+        binding.btnSendOtp.setOnClickListener {
             if (TextUtils.isEmpty(binding.fieldEmailForgotpass.text)) {
                 binding.fieldEmailForgotpass.error = "Email harus diisi"
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(binding.fieldEmailForgotpass.text).matches()) {
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.fieldEmailForgotpass.text)
+                    .matches()
+            ) {
                 binding.fieldEmailForgotpass.error = "Email invalid"
-            }
-            else if(!accountExists(binding.fieldEmailForgotpass.text.toString())) {
-                binding.fieldEmailForgotpass.error = "Email ini belum terdaftar"
-            }
-            else {
+            } else {
                 //show otp input field
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.activity_reset_password_otp_popup)
@@ -68,7 +69,10 @@ class ForgotPasswordActivity : AppCompatActivity() {
                             handler.postDelayed(this, 500) // menunda tampilan selama 500 milidetik
                         } else {
                             dialog.dismiss() // tutup dialog setelah 4 digit ditampilkan
-                            val intent = Intent(this@ForgotPasswordActivity, ResetPasswordActivity::class.java)
+                            val intent = Intent(
+                                this@ForgotPasswordActivity,
+                                ResetPasswordActivity::class.java
+                            )
                             startActivity(intent) // pindah ke halaman ResetPasswordActivity
                         }
                     }
@@ -77,26 +81,5 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 //
             }
         }
-    }
-    private fun accountExists(email : String) : Boolean {
-        val istream = assets.open("users.csv")
-        val reader = istream.bufferedReader()
-        reader.readLine() // discard header
-        var rowStr : String = reader.readLine()
-        var found = false
-        while (rowStr.isNotBlank()) {
-            var record = rowStr.split(",").toMutableList()
-            record[1] = record[1].trim()
-            if (record[1] == email) {
-                found = true
-                break
-            }
-            try {
-                rowStr = reader.readLine()
-            } catch (e : NullPointerException) {
-                break
-            }
-        }
-        return found
     }
 }

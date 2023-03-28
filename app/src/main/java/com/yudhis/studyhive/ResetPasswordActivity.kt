@@ -5,9 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.yudhis.studyhive.databinding.ActivityResetPasswordBinding
 
 class ResetPasswordActivity : AppCompatActivity() {
+    private val db = Firebase.firestore
     private lateinit var binding : ActivityResetPasswordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +54,5 @@ class ResetPasswordActivity : AppCompatActivity() {
     private fun resetPassword(email : String? = null, newPass : String) {
         val toast = Toast.makeText(this, "Password Direset! (TPI BOONG)", 1.toInt())
         toast.show()
-    }
-
-    private fun getRow(key : String) {
-        val istream = assets.open("users.csv")
-        val reader = istream.bufferedReader()
     }
 }

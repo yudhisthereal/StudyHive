@@ -22,4 +22,5 @@
 
     <!-- LANDING PAGE -->
     <string name="welcome">Selamat Datang</string>
+    <string name="title_activity_event_search">EventSearchActivity</string>
 </resources>
