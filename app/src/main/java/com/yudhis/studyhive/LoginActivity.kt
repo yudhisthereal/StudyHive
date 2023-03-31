@@ -145,7 +145,9 @@ class LoginActivity : AppCompatActivity() {
                             updateUI(user)
                         }
                     }
-                    updateUI(user)
+                    else {
+                        updateUI(user)
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     val exception = task.exception
