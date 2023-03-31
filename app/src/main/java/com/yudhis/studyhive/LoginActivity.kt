@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -138,6 +139,12 @@ class LoginActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
+                    if (user?.displayName == null) {
+                        val request = UserProfileChangeRequest.Builder().setDisplayName(user?.email).build()
+                        user?.updateProfile(request)?.addOnCanceledListener {
+                            updateUI(user)
+                        }
+                    }
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
