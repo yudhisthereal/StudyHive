@@ -158,7 +158,7 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(user : FirebaseUser?) {
         if (user != null) {
             //go to landing page
-            startActivity(Intent(this@LoginActivity, LandingPageActivity::class.java))
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         }
     }
