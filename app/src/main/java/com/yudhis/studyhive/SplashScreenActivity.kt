@@ -26,8 +26,14 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (savedInstanceState != null) {
+            val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.slide_out_right)
+            finish()
+        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+//        {
 //            window.insetsController?.hide(WindowInsets.Type.statusBars())
 //        } else {
 //            window.setFlags(

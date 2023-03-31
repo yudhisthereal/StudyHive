@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Google sign in
         val gso : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("421961381611-c33pgbcqcjuvi3r01aqjors21ogsd8rh.apps.googleusercontent.com")
+            .requestIdToken("421961381611-bb2tb0klvq2mc13n3lp920sb39krsa17.apps.googleusercontent.com")
             .requestEmail()
             .build()
         gsc = GoogleSignIn.getClient(this, gso)
@@ -101,7 +101,8 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
+                Log.w(TAG, "Google sign in failed ${e.message}")
+                Log.w(TAG, "Google sign in failed", e.cause)
             }
         }
     }
