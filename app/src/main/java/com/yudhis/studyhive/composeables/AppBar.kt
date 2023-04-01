@@ -13,19 +13,28 @@ import com.yudhis.studyhive.R
 
 @Composable
 fun AppBar(
-    onNavigationIconClicked: () -> Unit
+    onMenuClicked: () -> Unit
 ){
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.app_name))
+            Text(text = "")
         },
         elevation = 0.dp,
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme. colors.onPrimary,
-        navigationIcon = {
-            IconButton(onClick = onNavigationIconClicked) {
-                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_menu), contentDescription = "Navigation Button")
+        actions = {
+            MenuButton {
+                onMenuClicked()
             }
         }
     )
+}
+
+@Composable
+fun MenuButton(
+    onClick : () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_menu), contentDescription = "Menu Button")
+    }
 }

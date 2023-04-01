@@ -1,4 +1,4 @@
-package com.yudhis.studyhive.composeables
+package com.yudhis.studyhive.dataclass
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
