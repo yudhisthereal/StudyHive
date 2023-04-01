@@ -10,17 +10,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,8 +26,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.yudhis.studyhive.composeables.AppBar
 import com.yudhis.studyhive.composeables.DrawerBody
-import com.yudhis.studyhive.composeables.DrawerHeader
-import com.yudhis.studyhive.composeables.MenuItem
+import com.yudhis.studyhive.dataclass.MenuItem
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -90,7 +85,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainAppBar(coroutineScope: CoroutineScope, scaffoldState : ScaffoldState) {
         AppBar(
-            onNavigationIconClicked = {
+            onMenuClicked = {
                 coroutineScope.launch {
                     scaffoldState.drawerState.open()
                 }
@@ -100,7 +95,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainDrawerMenu(gsc : GoogleSignInClient) {
-        DrawerHeader()
         DrawerBody(
             items = listOf(
 //                                    MenuItem(
