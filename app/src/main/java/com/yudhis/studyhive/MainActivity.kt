@@ -134,7 +134,8 @@ class MainActivity : ComponentActivity() {
             onItemClick = { item ->
                 when (item.id) {
                     "account_info" -> {
-                        // TODO : Go to account info
+                        val intent = Intent(this@MainActivity, AccountInfoActivity::class.java)
+                        startActivity(intent)
                     }
                     "participants" -> {
                         // TODO : Go to participants detail

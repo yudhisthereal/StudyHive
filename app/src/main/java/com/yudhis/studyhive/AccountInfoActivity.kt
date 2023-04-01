@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class AccountInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +17,7 @@ class AccountInfoActivity : AppCompatActivity() {
         val btnUbahPassword = findViewById<Button>(R.id.bt_ubah_password)
 
         tvKembali.setOnClickListener {
-            Intent(this, LandingPageActivity::class.java).also {
+            Intent(this, MainActivity::class.java).also {
                 startActivity(it)
             }
         }
@@ -25,5 +27,28 @@ class AccountInfoActivity : AppCompatActivity() {
                 startActivity(it)
             }
         }
+
+        val user : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val displayName = user?.displayName
+        val namaLengkap = findViewById<TextView>(R.id.tv_namalengkap)
+        namaLengkap.text = displayName
+
+        val editInfoAkun = findViewById<Button>(R.id.bt_editinfoakun)
+
+        val editInfoFragment = editInfoFragment()
+        val baseInfoAkunFragment = BaseInfoAkunFragment()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.editfragment, baseInfoAkunFragment)
+            commit()
+        }
+
+        editInfoAkun.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.editfragment, editInfoFragment)
+                commit()
+            }
+        }
+
     }
 }

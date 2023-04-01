@@ -1,7 +1,9 @@
 package com.yudhis.studyhive
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import com.yudhis.studyhive.databinding.ActivityMainBinding
 
@@ -17,8 +19,8 @@ class CourseOverviewActivity : AppCompatActivity() {
 
         val persyaratanFragment = PersyaratanFragment()
         val pembicaraFragment = PembicaraFragment()
-
         val detailFragment = detailFragment()
+
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flfragment, detailFragment)
             commit()
@@ -39,6 +41,13 @@ class CourseOverviewActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flfragment, persyaratanFragment)
                 commit()
+            }
+        }
+
+        val btnDaftar = findViewById<Button>(R.id.bt_daftar)
+        btnDaftar.setOnClickListener {
+            Intent(this, SignUpCourseActivity::class.java).also {
+                startActivity(it)
             }
         }
 
