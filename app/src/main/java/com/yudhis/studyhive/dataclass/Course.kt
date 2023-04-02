@@ -1,6 +1,7 @@
 package com.yudhis.studyhive.dataclass
 
 import androidx.compose.ui.graphics.painter.Painter
+import java.time.LocalDate
 
 data class Course(
     val title : String,
