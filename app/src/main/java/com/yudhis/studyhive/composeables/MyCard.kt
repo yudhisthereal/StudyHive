@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.yudhis.studyhive.dataclass.*
+import com.yudhis.studyhive.tools.randomColor
+import kotlin.random.Random
 
 @Composable
 fun MyCard(
@@ -28,7 +32,7 @@ fun MyCard(
     cornerRadius: Dp,
     text: String,
     imagePainter: Painter,
-    description: String
+    description: String,
 ) {
     val modifier = Modifier
     var width = 4.dp
@@ -37,14 +41,14 @@ fun MyCard(
     var padding = 16.dp
     when(size) {
         Small -> {
-            width *= 16
-            height *= 16
+            width *= 24
+            height *= 24
             fontSize = 12.sp
             padding = 8.dp
         }
         Medium -> {
-            width *= 32
-            height *= 32
+            width *= 48
+            height *= 48
             fontSize = 16.sp
             padding = 12.dp
         }
@@ -59,20 +63,21 @@ fun MyCard(
         modifier = modifier
             .width(width)
             .height(height)
-            .padding(padding)
-            .shadow(elevation = 2.dp),
+            .padding(padding),
     ) {
         Box(
-            modifier =  modifier
+            modifier = modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(cornerRadius))
-                .background(brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Color.Transparent,
-                        MaterialTheme.colors.background
-                    ),
-                ))
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.Transparent,
+                            MaterialTheme.colors.background
+                        ),
+                    )
+                )
                 .zIndex(2f)
 
         )
@@ -83,7 +88,11 @@ fun MyCard(
                 .zIndex(1f)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(cornerRadius)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.tint(
+                color = randomColor(),
+                blendMode = BlendMode.Multiply
+            )
         )
         Text(
             text = text,

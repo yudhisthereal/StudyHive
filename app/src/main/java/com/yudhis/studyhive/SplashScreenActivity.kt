@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.Interpolator
+import com.google.firebase.auth.FirebaseAuth
 import com.yudhis.studyhive.databinding.ActivitySplashScreenBinding
 
 @Suppress("DEPRECATION")
@@ -57,7 +58,14 @@ class SplashScreenActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+                var intent: Intent
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                }
+                else {
+                    intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+                }
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.slide_out_right)
                 finish()

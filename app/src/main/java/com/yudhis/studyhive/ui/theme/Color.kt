@@ -3,6 +3,7 @@ package com.yudhis.studyhive.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val Transparent = Color(0x00000000)
+val SemiTransparent = Color (0x07ffffff)
 
 val Red50 = Color(0xFFFFEBEE)
 val Red100 = Color(0xFFFFCDD2)
