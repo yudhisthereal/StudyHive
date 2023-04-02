@@ -14,7 +14,7 @@ class AccountInfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_account_info)
 
         val tvKembali = findViewById<TextView>(R.id.tv_kembali)
-        val btnUbahPassword = findViewById<Button>(R.id.bt_ubah_password)
+//        val btnUbahPassword = findViewById<Button>(R.id.bt_ubah_password)
 
         tvKembali.setOnClickListener {
             Intent(this, MainActivity::class.java).also {
@@ -22,11 +22,11 @@ class AccountInfoActivity : AppCompatActivity() {
             }
         }
 
-        btnUbahPassword.setOnClickListener {
-            Intent(this,ChangePasswordAccountInfoActivity::class.java).also {
-                startActivity(it)
-            }
-        }
+//        btnUbahPassword.setOnClickListener {
+//            Intent(this,ChangePasswordAccountInfoActivity::class.java).also {
+//                startActivity(it)
+//            }
+//        }
 
         val user : FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val displayName = user?.displayName

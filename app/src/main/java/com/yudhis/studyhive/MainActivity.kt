@@ -413,7 +413,8 @@ class MainActivity : ComponentActivity() {
             onItemClick = { item ->
                 when (item.id) {
                     "account_info" -> {
-                        TODO("not yet implemented")
+                        val intent = Intent(this, AccountInfoActivity::class.java)
+                        startActivity(intent)
                     }
                     "participants" -> {
                         TODO("not yet implemented")

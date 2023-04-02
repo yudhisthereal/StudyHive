@@ -17,7 +17,12 @@ class BaseInfoAkunFragment : Fragment(R.layout.fragment_base_info_akun) {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_base_info_akun, container,false)
         val args = this.arguments
-
+        val btnUbahPassword = view.findViewById<Button>(R.id.bt_ubah_password)
+        btnUbahPassword.setOnClickListener {
+            Intent(requireContext(),ChangePasswordAccountInfoActivity::class.java).also {
+                startActivity(it)
+            }
+        }
         val inputDataNama = args?.getString("nama")
         val inputDataEmail = args?.getString("email")
         val inputDataNotelp = args?.getString("notelp")
