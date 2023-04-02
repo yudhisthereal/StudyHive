@@ -49,6 +49,8 @@ import com.yudhis.studyhive.dataclass.MenuItem
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 import com.yudhis.studyhive.ui.theme.Transparent
 import com.yudhis.studyhive.dataclass.*
+import com.yudhis.studyhive.tools.randomColor
+import com.yudhis.studyhive.tools.randomCourseCategory
 import com.yudhis.studyhive.ui.theme.Gray500
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -84,6 +86,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         },
+
                     ) { padding ->
                         val modifier = Modifier.padding(padding)
                         val searchQuery = remember {
@@ -123,7 +126,9 @@ class MainActivity : ComponentActivity() {
                     title = titles[Random().nextInt(titles.size)] + " ID $i",
                     briefDescription = "Hi! What's up? Oh you wanna strike a job offer but not too sure about your skills? Well, you might want to consider enrolling this course, NOW!",
                     fullDescription = "",
-                    image = painterResource(id = R.drawable.img_course_demo_256)
+                    image = painterResource(id = R.drawable.img_course_demo_256),
+                    tint = randomColor(),
+                    category = randomCourseCategory()
                 )
             )
         }
@@ -196,7 +201,7 @@ class MainActivity : ComponentActivity() {
     private fun CourseSuggestions(items: List<Course>) {
         LazyColumn {
             items(
-                items = items,
+                items = items.reversed(),
                 itemContent = { courseData ->
                     CourseEntry(
                         courseData = courseData,
@@ -218,7 +223,8 @@ class MainActivity : ComponentActivity() {
                     cornerRadius = 8.dp,
                     text = item.title,
                     imagePainter = painterResource(id = R.drawable.img_demo_course),
-                    description = "Discover ${item.title}"
+                    description = "Discover ${item.title}",
+                    tint = item.tint
                 )
             }
         }
@@ -318,7 +324,8 @@ class MainActivity : ComponentActivity() {
                     elevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colors.background),
                 ) {
                     Column(
                         verticalArrangement = Arrangement.SpaceAround,

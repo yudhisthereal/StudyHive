@@ -33,6 +33,7 @@ fun MyCard(
     text: String,
     imagePainter: Painter,
     description: String,
+    tint: Color = Color.White
 ) {
     val modifier = Modifier
     var width = 4.dp
@@ -81,18 +82,16 @@ fun MyCard(
                 .zIndex(2f)
 
         )
-        Image(
+        RoundCornerImage(
             painter = imagePainter,
-            contentDescription = description,
+            description = description,
             modifier = modifier
                 .zIndex(1f)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(cornerRadius)),
             contentScale = ContentScale.Crop,
-            colorFilter = ColorFilter.tint(
-                color = randomColor(),
-                blendMode = BlendMode.Multiply
-            )
+            tint = tint,
+            cornerRadius = 16.dp
         )
         Text(
             text = text,

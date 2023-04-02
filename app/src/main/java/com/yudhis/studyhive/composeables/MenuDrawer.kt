@@ -35,7 +35,8 @@ fun DrawerBody(
         Text(
             text = "Menu",
             fontWeight = FontWeight.Black,
-            fontSize = 32.sp
+            fontSize = 32.sp,
+            color = MaterialTheme.colors.onBackground
         )
 
         Spacer(modifier = Modifier.width(16.dp))

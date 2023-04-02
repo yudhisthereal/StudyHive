@@ -25,7 +25,8 @@ fun RoundCornerImage(
     bottomEnd: Dp = 4.dp,
     elevation: Dp = 2.dp,
     contentScale: ContentScale = ContentScale.Crop,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tint: Color = Color.White
 ) {
     Image(
         painter = painter,
@@ -44,7 +45,7 @@ fun RoundCornerImage(
         contentScale = contentScale,
         alignment = Alignment.Center,
         colorFilter = ColorFilter.tint(
-            color = randomColor(),
+            color = tint,
             blendMode = BlendMode.Multiply
         )
     )
@@ -57,7 +58,8 @@ fun RoundCornerImage(
     cornerRadius: Dp = 16.dp,
     elevation: Dp = 2.dp,
     contentScale: ContentScale = ContentScale.Crop,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tint: Color = Color.White
 ) {
     Image(
         painter = painter,
@@ -73,7 +75,7 @@ fun RoundCornerImage(
         contentScale = contentScale,
         alignment = Alignment.Center,
         colorFilter = ColorFilter.tint(
-            color = randomColor(),
+            color = tint,
             blendMode = BlendMode.Multiply
         )
     )

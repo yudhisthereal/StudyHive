@@ -28,7 +28,8 @@ fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
             painter = courseData.image,
             description = "Course Entry titled ${courseData.title}",
             topStart = 24.dp,
-            modifier = Modifier.clickable { onEnrollClicked }
+            modifier = Modifier.clickable { onEnrollClicked },
+            tint = courseData.tint
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(
@@ -54,7 +55,7 @@ fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
             }
 
             Column {
-                CategoryTag(text = courseData.category.toString())
+                CategoryTag(category = courseData.category)
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
