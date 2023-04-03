@@ -13,6 +13,27 @@ class CourseOverviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_overview)
 
+        val tv1 = findViewById<TextView>(R.id.tv_1)
+        val description = intent.getStringExtra("course_brief_description")
+        tv1.text = description
+
+        val tvJudulCourse = findViewById<TextView>(R.id.tv_judulcourse)
+        val title = intent.getStringExtra("course_title")
+        tvJudulCourse.text = title
+
+        val tvRating = findViewById<TextView>(R.id.tv_2)
+        val rating = intent.getStringExtra("course_rating")
+        tvRating.text = rating.toString()
+
+        val tvStartDate = findViewById<TextView>(R.id.tv_3)
+        val startDate = intent.getStringExtra("course_startDate")
+        tvStartDate.text = startDate
+
+        val tvEndDate = findViewById<TextView>(R.id.tv_4)
+        val endDate = intent.getStringExtra("course_endDate")
+        tvEndDate.text = endDate
+
+
         val tvDetail = findViewById<TextView>(R.id.tv_detail)
         val tvPembicara = findViewById<TextView>(R.id.tv_pembicara)
         val tvPersyaratan = findViewById<TextView>(R.id.tv_persyaratan)
@@ -47,6 +68,9 @@ class CourseOverviewActivity : AppCompatActivity() {
         val btnDaftar = findViewById<Button>(R.id.bt_daftar)
         btnDaftar.setOnClickListener {
             Intent(this, SignUpCourseActivity::class.java).also {
+                it.putExtra("course_title", title)
+                it.putExtra("course_startDate", startDate)
+                it.putExtra("course_endDate", endDate)
                 startActivity(it)
             }
         }

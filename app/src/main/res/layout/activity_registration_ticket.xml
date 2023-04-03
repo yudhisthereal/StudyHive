@@ -51,7 +51,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="10dp"
-                android:src="@color/cardview_dark_background"/>
+                android:src="@drawable/img_course_demo_256"/>
 
             <TextView
                 android:id="@+id/tv_event"
@@ -64,10 +64,10 @@
                 android:layout_marginTop="5dp"/>
 
             <TextView
-                android:id="@+id/tv_tanggal"
+                android:id="@+id/tv_tanggalmulai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:text="Tanggal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,21 +75,42 @@
                 android:drawableStart="@drawable/ic_calendar"/>
 
             <TextView
+                android:id="@+id/tv_tanggalselesai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Tanggal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tanggalmulai"
+                android:drawableStart="@drawable/ic_calendar"/>
+
+            <TextView
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="75dp"
-                android:text="Location"
+                android:layout_marginEnd="25dp"
+                android:text="Location : Indonesia"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_event"
                 android:drawableStart="@drawable/ic_home"/>
 
             <TextView
-                android:id="@+id/tv_nama_partisipan"
+                android:id="@+id/tv_namapendaftar"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="132dp"
+                android:layout_marginTop="300dp"
+                android:text="xxxxxxxxxxx"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_tanggal"
+                app:layout_constraintTop_toBottomOf="@id/tv_tanggalselesai"
                 android:layout_marginTop="20dp"
                 android:text="Nama Pendaftar :"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,10 +120,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="336dp"
                 android:text="Nama Partisipan :"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_nama_partisipan" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

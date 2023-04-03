@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -57,10 +56,8 @@ import com.yudhis.studyhive.dataclass.*
 import com.yudhis.studyhive.tools.randomColor
 import com.yudhis.studyhive.tools.randomCourseCategory
 import com.yudhis.studyhive.ui.theme.Gray500
-import com.yudhis.studyhive.ui.theme.SemiTransparent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.time.Duration
 import java.util.*
 
 class MainActivity : ComponentActivity() {
@@ -73,12 +70,8 @@ class MainActivity : ComponentActivity() {
         val user = _auth.currentUser
         val gsc = GoogleSignIn.getClient(this@MainActivity, GoogleSignInOptions.DEFAULT_SIGN_IN)
         setContent {
-            var readyToGenerateCourses by remember{ mutableStateOf(true) }
-            if (readyToGenerateCourses) {
-                GenerateDummyCourses()
-                _courses = coursesDataset
-                readyToGenerateCourses = false
-            }
+            GenerateDummyCourses()
+            _courses = coursesDataset
             StudyHiveTheme {
                 Box {
                     val scaffoldState = rememberScaffoldState()
@@ -129,6 +122,31 @@ class MainActivity : ComponentActivity() {
             "Unreal Engine 101",
             "Ethical Hacking"
         )
+        val fullDescriptions = listOf<String>(
+            "This course will cover the basics of cyber security and help you become familiar with different types of cyber attacks and how to protect yourself against them.",
+            "This course is a comprehensive guide to using the Linux operating system, from the basics of installation and configuration to advanced topics like network administration and server management.",
+            "In this masterclass, you will learn everything you need to know to create beautiful and functional websites using WordPress, the world's most popular content management system.",
+            "If you've ever wanted to make your own video games, this course is for you. You'll learn how to use the Godot game engine to create 2D and 3D games from scratch, even if you have no prior experience with programming or game development.",
+            "Unreal Engine is one of the most popular game engines in the world, used by professional game developers to create blockbuster titles. In this course, you'll learn the basics of game development with Unreal Engine and create your own games.",
+            "This course will teach you how to use ethical hacking techniques to identify and exploit vulnerabilities in computer systems and networks. You'll learn how to use tools like Kali Linux and Metasploit to perform penetration testing and secure your own systems."
+        )
+        val startDate = listOf<String>(
+            "1 Januari 2023",
+            "2 februari 2023",
+            "3 Maret 2023",
+            "4 April 2023",
+            "5 Mei 2023",
+            "6 Juni 2023"
+        )
+
+        val endDate = listOf<String>(
+            "1 Juli 2023",
+            "2 Agustus 2023",
+            "3 September 2023",
+            "4 Oktober 2023",
+            "5 November 2023",
+            "6 Desember 2023"
+        )
 
         for (i in 1 until 127) {
             courses.add(
@@ -138,7 +156,10 @@ class MainActivity : ComponentActivity() {
                     fullDescription = "",
                     image = painterResource(id = R.drawable.img_course_demo_256),
                     tint = randomColor(),
-                    category = randomCourseCategory()
+                    category = randomCourseCategory(),
+                    rating = Random().nextFloat() * (5.0f - 1.0f) + 1.0f,
+                    startDate = startDate[Random().nextInt(startDate.size)] ,
+                    endDate = endDate[Random().nextInt(endDate.size)] ,
                 )
             )
         }
@@ -263,7 +284,16 @@ class MainActivity : ComponentActivity() {
                     CourseEntry(
                         courseData = courseData,
                         onEnrollClicked = {
-                            TODO("Go To Course Overview")
+                            val intent = Intent(this@MainActivity, CourseOverviewActivity::class.java).apply {
+                                putExtra("course_title", courseData.title)
+                                putExtra("course_brief_description", courseData.briefDescription)
+                                putExtra("course_full_description", courseData.fullDescription)
+                                putExtra("course_rating",courseData.rating.toString())
+                                putExtra("course_endDate",courseData.endDate)
+                                putExtra("course_startDate",courseData.startDate)
+
+                            }
+                            startActivity(intent)
                         }
                     )
                 }

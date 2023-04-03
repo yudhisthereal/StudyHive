@@ -23,6 +23,7 @@
             android:id="@+id/imageView" />
 
         <TextView
+            android:id="@+id/tv_judulcourse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Judul Course"
@@ -36,35 +37,70 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-    android:id="@+id/tv_tanggal"
+    android:id="@+id/tv_tanggalmulai"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintTop_toBottomOf="@+id/cv"
     app:layout_constraintStart_toStartOf="parent"
-    android:text="Tanggal"
+    android:text="Tanggal Mulai: "
     android:textSize="15sp"
     android:layout_marginStart="40dp"
     android:layout_marginTop="10dp"
     />
 
     <TextView
+        android:id="@+id/tv_startDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cv"
+        app:layout_constraintStart_toEndOf="@id/tv_tanggalmulai"
+        android:text="Tanggal"
+        android:textSize="15sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_tanggalSelesai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_tanggalmulai"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Tanggal Selesai: "
+        android:textSize="15sp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:id="@+id/tv_endDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tanggalmulai"
+        app:layout_constraintStart_toEndOf="@id/tv_tanggalSelesai"
+        android:text="Tanggal"
+        android:textSize="15sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
         android:id="@+id/tv_alamat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="28dp"
-        android:text="Alamat"
+        android:layout_marginTop="10dp"
+        android:text="Alamat : Indonesia"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_tanggal" />
+        app:layout_constraintTop_toBottomOf="@id/tv_tanggalSelesai" />
 
     <TextView
         android:id="@+id/tv_kuota"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="116dp"
-        android:text="Kuota"
+        android:layout_marginEnd="60dp"
+        android:text="Kuota : 100"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv" />
@@ -83,7 +119,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
+        android:text="Partisipan1"
         app:layout_constraintTop_toBottomOf="@id/tv_pilih_partisipan"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -92,7 +128,7 @@
         android:id="@+id/checkBox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
+        android:text="Partisipan2"
         app:layout_constraintTop_toBottomOf="@id/checkBox"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -101,7 +137,7 @@
         android:id="@+id/checkBox3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
+        android:text="Partisipan3"
         app:layout_constraintTop_toBottomOf="@id/checkBox2"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -110,7 +146,7 @@
         android:id="@+id/checkBox4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
+        android:text="Partisipan4"
         app:layout_constraintTop_toBottomOf="@id/checkBox3"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -119,7 +155,7 @@
         android:id="@+id/checkBox5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
+        android:text="Partisipan5"
         app:layout_constraintTop_toBottomOf="@id/checkBox4"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"/>
