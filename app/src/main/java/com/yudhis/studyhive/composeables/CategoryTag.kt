@@ -30,7 +30,6 @@ fun CategoryTag(category:CourseCategory) {
             .border(width = 2.dp, color = courseCategoryColors.getValue(category).border, shape = RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .wrapContentSize(),
-
     ) {
         Text(
             text = category.toString(),

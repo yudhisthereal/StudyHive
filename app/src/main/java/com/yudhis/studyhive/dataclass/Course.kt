@@ -19,7 +19,7 @@ data class Course(
 )
 
 enum class CourseCategory {
-    FrontEnd, BackEnd, FullStack, MachineLearning, ArtificialIntelligence, CyberSecurity
+    All, FrontEnd, BackEnd, FullStack, MachineLearning, ArtificialIntelligence, CyberSecurity
 }
 
 data class TagColor(
@@ -51,6 +51,10 @@ val courseCategoryColors = mapOf<CourseCategory, TagColor>(
     CourseCategory.CyberSecurity to TagColor(
         border = Purple900,
         background = Purple50.copy(alpha = 0.15f)
+    ),
+    CourseCategory.All to TagColor(
+        border = Gray500,
+        background = Gray100.copy(alpha = 0.15f)
     )
 )
 

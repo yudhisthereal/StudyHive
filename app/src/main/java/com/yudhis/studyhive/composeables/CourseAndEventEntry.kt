@@ -5,15 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.widget.Group
 import com.yudhis.studyhive.dataclass.Course
 import com.yudhis.studyhive.dataclass.Event
 
@@ -21,6 +17,7 @@ import com.yudhis.studyhive.dataclass.Event
 fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
     Row(
         modifier = Modifier
+            .height(IntrinsicSize.Max)
             .padding(bottom = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -33,7 +30,7 @@ fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(
-            modifier = Modifier.height(130.dp),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
