@@ -17,5 +17,5 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class detailFragment : Fragment(R.layout.fragment_detail) {
-
+    //hanya menampilkan layout fragmen detail, belum diatur detailnya
     }

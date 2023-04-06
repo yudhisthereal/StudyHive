@@ -17,4 +17,5 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class PembicaraFragment : Fragment(R.layout.fragment_pembicara) {
+    //hanya menampilkan layout fragmen pembicara, belum diatur pembicaranya
 }

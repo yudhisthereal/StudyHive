@@ -12,6 +12,8 @@ class RegistrationTicketActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration_ticket)
+
+        //menampilkan data dari sign up course activity menuju ke regristration ticket activity
         val tvJudulCourse = findViewById<TextView>(R.id.tv_event)
         val title = intent.getStringExtra("course_title")
         tvJudulCourse.text = title
@@ -29,7 +31,7 @@ class RegistrationTicketActivity : AppCompatActivity() {
         val namaLengkap = findViewById<TextView>(R.id.tv_namapendaftar)
         namaLengkap.text = displayName
 
-
+        //mengatur tombol seleseai agar ketika ditekan menuju ke main activity dan membawa data title, startdate dan enddate
         val btnSelesai = findViewById<Button>(R.id.bt_selesai)
         btnSelesai.setOnClickListener {
             Intent(this, MainActivity::class.java).also {

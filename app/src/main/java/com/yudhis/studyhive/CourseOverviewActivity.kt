@@ -13,6 +13,7 @@ class CourseOverviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_overview)
 
+        //membawa informasi data dari main activity ke course overview activity
         val tv1 = findViewById<TextView>(R.id.tv_1)
         val description = intent.getStringExtra("course_brief_description")
         tv1.text = description
@@ -33,31 +34,36 @@ class CourseOverviewActivity : AppCompatActivity() {
         val endDate = intent.getStringExtra("course_endDate")
         tvEndDate.text = endDate
 
-
+        //membuat fragmen detail, fragmen pembicara dan fragmen persyaratan
         val tvDetail = findViewById<TextView>(R.id.tv_detail)
         val tvPembicara = findViewById<TextView>(R.id.tv_pembicara)
         val tvPersyaratan = findViewById<TextView>(R.id.tv_persyaratan)
 
+        //memanggil kelas fragmen detail, fragmen pembicara dan fragmen persyaratan
         val persyaratanFragment = PersyaratanFragment()
         val pembicaraFragment = PembicaraFragment()
         val detailFragment = detailFragment()
 
+        //fragmen default menggunakan detail fragment
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flfragment, detailFragment)
             commit()
         }
+        //TvDetail ditekan, frame layout menampilkan fragmen detail
         tvDetail.setOnClickListener {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flfragment, detailFragment)
                 commit()
             }
         }
+        //tvPembicara ditekan, frame layout menampilkan fragmen pembicara
         tvPembicara.setOnClickListener {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flfragment, pembicaraFragment)
                 commit()
             }
         }
+        //tvPersyaratan ditekan, frame layout menampilkan fragmen persyaratan
         tvPersyaratan.setOnClickListener {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flfragment, persyaratanFragment)
@@ -65,6 +71,7 @@ class CourseOverviewActivity : AppCompatActivity() {
             }
         }
 
+        //mengatur tombol daftar agar ketika ditekan menuju signup course activity dan membawa data title, startdate dan enddate
         val btnDaftar = findViewById<Button>(R.id.bt_daftar)
         btnDaftar.setOnClickListener {
             Intent(this, SignUpCourseActivity::class.java).also {

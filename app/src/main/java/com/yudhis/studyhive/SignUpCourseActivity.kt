@@ -11,6 +11,7 @@ class SignUpCourseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_course)
 
+        //menampilkan data dari course overview activity menuju ke sign up course activity
         val tvJudulCourse = findViewById<TextView>(R.id.tv_judulcourse)
         val title = intent.getStringExtra("course_title")
         tvJudulCourse.text = title
@@ -23,6 +24,7 @@ class SignUpCourseActivity : AppCompatActivity() {
         val endDate = intent.getStringExtra("course_endDate")
         tvEndDate.text = endDate
 
+        //mengatur tombol buat tiket agar ketika ditekan menuju ke regristtration ticket activty dan membawa data title,startdate dan enddate
         val btnBuatTiket = findViewById<Button>(R.id.bt_buat_tiket)
         btnBuatTiket.setOnClickListener {
             Intent(this, RegistrationTicketActivity::class.java).also {

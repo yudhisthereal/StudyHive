@@ -18,6 +18,8 @@ class editInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_edit_info, container,false)
+
+        //mengatur tombol simpan untuk menyimpan data dan dibawa ke fragmen base info akun
         val btnSimpan = view.findViewById<Button>(R.id.bt_simpan)
         btnSimpan.setOnClickListener {
             val etNama = view.findViewById<EditText>(R.id.et_nama)

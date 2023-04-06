@@ -17,12 +17,14 @@ class BaseInfoAkunFragment : Fragment(R.layout.fragment_base_info_akun) {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_base_info_akun, container,false)
         val args = this.arguments
+        //mengatur tombol ubah password ditekan menuju change password account info activity
         val btnUbahPassword = view.findViewById<Button>(R.id.bt_ubah_password)
         btnUbahPassword.setOnClickListener {
             Intent(requireContext(),ChangePasswordAccountInfoActivity::class.java).also {
                 startActivity(it)
             }
         }
+        //untuk menerima data dari fragmen edit info akun
         val inputDataNama = args?.getString("nama")
         val inputDataEmail = args?.getString("email")
         val inputDataNotelp = args?.getString("notelp")
