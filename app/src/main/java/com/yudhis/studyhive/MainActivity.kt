@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -44,15 +47,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.yudhis.studyhive.composeables.*
 import com.yudhis.studyhive.data.coursesDataset
+import com.yudhis.studyhive.data.filteredDataByCategory
 import com.yudhis.studyhive.data.filteredDataByQuery
 import com.yudhis.studyhive.dataclass.MenuItem
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 import com.yudhis.studyhive.ui.theme.Transparent
 import com.yudhis.studyhive.dataclass.*
+import com.yudhis.studyhive.tools.randomColor
+import com.yudhis.studyhive.tools.randomCourseCategory
 import com.yudhis.studyhive.ui.theme.Gray500
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.*
 
 class MainActivity : ComponentActivity() {
@@ -65,7 +70,7 @@ class MainActivity : ComponentActivity() {
         val user = _auth.currentUser
         val gsc = GoogleSignIn.getClient(this@MainActivity, GoogleSignInOptions.DEFAULT_SIGN_IN)
         setContent {
-            generateDummyCourses()
+            GenerateDummyCourses()
             _courses = coursesDataset
             StudyHiveTheme {
                 Box {
@@ -107,9 +112,9 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun generateDummyCourses() {
-        var courses = mutableListOf<Course>()
-        val titles = listOf<String>(
+    fun GenerateDummyCourses() {
+        val courses = mutableListOf<Course>()
+        val titles = listOf(
             "Cyber Security Basics",
             "Linux Full Guide",
             "Wordpress Masterclass",
@@ -148,8 +153,10 @@ class MainActivity : ComponentActivity() {
                 Course(
                     title = titles[Random().nextInt(titles.size)] + " ID $i",
                     briefDescription = "Hi! What's up? Oh you wanna strike a job offer but not too sure about your skills? Well, you might want to consider enrolling this course, NOW!",
-                    fullDescription = fullDescriptions[i % fullDescriptions.size],
+                    fullDescription = "",
                     image = painterResource(id = R.drawable.img_course_demo_256),
+                    tint = randomColor(),
+                    category = randomCourseCategory(),
                     rating = Random().nextFloat() * (5.0f - 1.0f) + 1.0f,
                     startDate = startDate[Random().nextInt(startDate.size)] ,
                     endDate = endDate[Random().nextInt(endDate.size)] ,
@@ -160,7 +167,20 @@ class MainActivity : ComponentActivity() {
         coursesDataset = courses
     }
     @Composable
-    fun MainUI(user : FirebaseUser?, modifier : Modifier, searchState: MutableState<TextFieldValue>) {
+    fun MainUI(
+        user : FirebaseUser?,
+        modifier : Modifier,
+        searchState: MutableState<TextFieldValue>
+    ) {
+        var searchQuery by remember { mutableStateOf("") }
+        val context = LocalContext.current
+        var isSearching by remember{ mutableStateOf(false) }
+        var categoryFilter by remember { mutableStateOf(CourseCategory.All) }
+        BackHandler(isSearching) {
+            isSearching = false
+            searchQuery = ""
+        }
+
         Box(
             modifier = modifier
                 .background(MaterialTheme.colors.primary)
@@ -168,7 +188,18 @@ class MainActivity : ComponentActivity() {
         ) {
             Column()
             {
-                Greeting(user)
+                if (!isSearching) {
+                    Greeting(user)
+                } else {
+                    Text(
+                        text = user?.displayName.toString() + "!",
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colors.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 32.dp),
+                        softWrap = true
+                    )
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Box {
                     Box(
@@ -194,7 +225,12 @@ class MainActivity : ComponentActivity() {
                                 searchState.value = newQuery
                             },
                             onSearch = { query ->
-                                _courses = filteredDataByQuery(query).toMutableList()
+                                searchQuery = query
+                            },
+                            onFocusChanged = { hasFocus ->
+                                if (hasFocus) {
+                                    isSearching = true
+                                }
                             }
                         )
                         Spacer(
@@ -202,7 +238,8 @@ class MainActivity : ComponentActivity() {
                                 .height(32.dp)
                         )
 
-                        if (searchState.value.text.isBlank()) {
+                        if (!isSearching) {
+                            _courses = coursesDataset
                             SectionHeader(text = "Populer")
                             DiscoverCoursesAndEvents(_courses.toList())
                             Spacer(modifier = Modifier.height(16.dp))
@@ -210,11 +247,28 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                         else {
+                            val coursesSet: Set<Course> = filteredDataByCategory(categoryFilter).toSet()
+                                .intersect(filteredDataByQuery(searchQuery).toSet())
+                            _courses = coursesSet.toMutableList()
                             SectionHeader(text = "Hasil Pencarian")
                             Spacer(modifier = Modifier.height(16.dp))
-                            _courses = filteredDataByQuery(searchState.value.text).toMutableList()
                         }
                         CourseSuggestions(_courses.toList())
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                    {
+                        Spacer(Modifier.height(512.dp))
+                        if (isSearching) {
+                            FilterSheet(
+                                onFilterUpdate = {
+                                    categoryFilter = it
+                                },
+                                selectedCategory = categoryFilter
+                            )
+                        }
                     }
                 }
             }
@@ -225,7 +279,7 @@ class MainActivity : ComponentActivity() {
     private fun CourseSuggestions(items: List<Course>) {
         LazyColumn {
             items(
-                items = items,
+                items = items.reversed(),
                 itemContent = { courseData ->
                     CourseEntry(
                         courseData = courseData,
@@ -256,7 +310,8 @@ class MainActivity : ComponentActivity() {
                     cornerRadius = 8.dp,
                     text = item.title,
                     imagePainter = painterResource(id = R.drawable.img_demo_course),
-                    description = "Discover ${item.title}"
+                    description = "Discover ${item.title}",
+                    tint = item.tint
                 )
             }
         }
@@ -266,7 +321,8 @@ class MainActivity : ComponentActivity() {
     private fun SearchBar(
         searchState: MutableState<TextFieldValue>,
         onQueryChanged: (newQuery: TextFieldValue) -> Unit,
-        onSearch: (query: String) -> Unit
+        onSearch: (query: String) -> Unit,
+        onFocusChanged: (hasFocus: Boolean) -> Unit
     ) {
 //        val context = LocalContext.current.applicationContext
         val focusManager = LocalFocusManager.current
@@ -280,7 +336,8 @@ class MainActivity : ComponentActivity() {
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.onBackground,
-                unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(ContentAlpha.high)
+                unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(ContentAlpha.high),
+                cursorColor = MaterialTheme.colors.onBackground
             ),
             trailingIcon = {
                 Icon(
@@ -300,6 +357,7 @@ class MainActivity : ComponentActivity() {
                     Handler(Looper.getMainLooper()).postDelayed({
                         hasFocus = it.hasFocus
                     }, 1000)
+                    onFocusChanged(it.hasFocus)
                 },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
@@ -356,7 +414,8 @@ class MainActivity : ComponentActivity() {
                     elevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colors.background),
                 ) {
                     Column(
                         verticalArrangement = Arrangement.SpaceAround,
@@ -380,7 +439,6 @@ class MainActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Button(
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
                                 onClick = {
                                     gsc.signOut().addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
@@ -477,6 +535,110 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    @OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
+    @Composable
+    fun FilterSheet(onFilterUpdate: (CourseCategory) -> Unit, selectedCategory: CourseCategory?) {
+        val coroutineScope = rememberCoroutineScope()
+        val sheetState = rememberBottomSheetScaffoldState(
+            bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        )
+
+        BottomSheetScaffold(
+            scaffoldState = sheetState,
+            sheetContent = {
+                Column {
+                    FilterSheetOpener(scope = coroutineScope, state = sheetState)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.Center,
+                        maxItemsInEachRow = 4,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                    {
+                        for(category in CourseCategory.values()) {
+                            TagButton(
+                                category = category,
+                                onClick = {
+                                    onFilterUpdate(category)
+                                },
+                                selected = (selectedCategory == category)
+                            )
+                        }
+                        Spacer(Modifier.height(16.dp))
+                    }
+                }
+            },
+            sheetPeekHeight = 72.dp,
+            sheetGesturesEnabled = true,
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+            backgroundColor = Transparent,
+        ) {
+            Void()
+        }
+    }
+
+
+    @Composable
+    fun TagButton(category: CourseCategory, onClick: () -> Unit, selected: Boolean = false) {
+        val colors =
+            if (!selected) courseCategoryColors.getValue(category)
+            else TagColor(
+                border = MaterialTheme.colors.primary,
+                background = MaterialTheme.colors.primary
+            )
+        Box(
+            modifier = Modifier
+                .background(Transparent)
+                .padding(2.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { onClick() }
+                    .background(if (selected) colors.background.copy(alpha = 1f) else colors.background)
+                    .border(
+                        width = 2.dp,
+                        color = colors.border,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .wrapContentSize()
+            ) {
+                Text(
+                    text = category.toString(),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun FilterSheetOpener(scope: CoroutineScope, state: BottomSheetScaffoldState) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .background(Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                onClick = {
+                    scope.launch {
+                        state.bottomSheetState.expand()
+                    }
+                },
+            ) {
+                Text(text = "Filter")
+            }
+        }
+    }
+
+    @Composable
+    fun Void() {
+        Text("")
+    }
     @Preview(showBackground = true)
     @Composable
     fun AppPreview()

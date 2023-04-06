@@ -15,23 +15,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yudhis.studyhive.dataclass.CourseCategory
+import com.yudhis.studyhive.dataclass.courseCategoryColors
+import com.yudhis.studyhive.ui.theme.Cyan900
 import com.yudhis.studyhive.ui.theme.SemiTransparent
 import com.yudhis.studyhive.ui.theme.Teal900
 
 @Composable
-fun CategoryTag(text:String) {
+fun CategoryTag(category:CourseCategory) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(SemiTransparent)
-            .border(width = 1.dp, color = MaterialTheme.colors.onSurface, shape = RoundedCornerShape(16.dp))
+            .border(width = 2.dp, color = courseCategoryColors.getValue(category).border, shape = RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .wrapContentSize(),
-
     ) {
         Text(
-            text = text,
-            color = MaterialTheme.colors.onSurface,
+            text = category.toString(),
             fontSize = 10.sp,
             textAlign = TextAlign.Center
         )

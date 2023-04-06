@@ -16,13 +16,3 @@ fun randomCourseCategory(): CourseCategory {
     lastPickedCourseCategory = category
     return category
 }
-
-fun randomEventCategory(): EventCategory {
-    var category = EventCategory.SocialEvent
-    val categories = EventCategory.values()
-    while(category == lastPickedEventCategory) {
-        category = categories[Random().nextInt(categories.size)]
-    }
-    lastPickedEventCategory = category
-    return category
-}
