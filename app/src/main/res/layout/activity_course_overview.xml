@@ -50,71 +50,73 @@
 
     <TextView
         android:id="@+id/tv_2"
-        android:text="zzzzzzzz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_1"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="5dp"
+        android:text="zzzzzzzz"
         android:textSize="15sp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="5dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_1" />
 
     <TextView
         android:id="@+id/tv_3"
-        android:text="zzzzzzz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_2"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="4dp"
+        android:text="zzzzzzz"
         android:textSize="15sp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="5dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_2" />
 
     <TextView
         android:id="@+id/tv_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="12dp"
         android:text="zzzzzzz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_3"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="15sp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="5dp" />
+        app:layout_constraintTop_toBottomOf="@id/tv_3" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/rating"
-        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        app:layout_constraintStart_toEndOf="@id/tv_2"
+        android:text="Rating (out of 5.0) : "
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_1"
-        android:text="(rating)"/>
+        android:drawableStart="@drawable/ic_star"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/startDate"
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        app:layout_constraintStart_toEndOf="@id/tv_3"
-        app:layout_constraintTop_toBottomOf="@id/tv_2"
-        android:text="(start date)"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/endDate"
-        android:textSize="15sp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        app:layout_constraintStart_toEndOf="@id/tv_4"
-        app:layout_constraintTop_toBottomOf="@id/tv_3"
-        android:text="(end date)"/>
+        android:drawableStart ="@drawable/ic_calendar"
+        android:text="Start date               : "
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_2" />
 
 
+    <TextView
+        android:id="@+id/endDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_calendar"
+        android:text="End date                 : "
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_3" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv2"
@@ -180,7 +182,7 @@
     </androidx.cardview.widget.CardView>
 
     <FrameLayout
-        android:layout_width="345dp"
+        android:layout_width="340dp"
         android:layout_height="300dp"
         android:id="@+id/flfragment"
         app:layout_constraintTop_toBottomOf="@id/cv2"
@@ -215,31 +217,21 @@
         android:id="@+id/ci_1"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="180dp"
+        android:layout_marginBottom="16dp"
         android:src="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ci_2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/ci_1"
+    <Button
+        android:id="@+id/bt_back"
+        android:text="back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@color/grey"/>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ci_3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/ci_2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@color/grey"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

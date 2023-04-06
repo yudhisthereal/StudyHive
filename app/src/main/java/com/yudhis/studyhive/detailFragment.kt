@@ -5,17 +5,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class detailFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_detail, container,false)
 
-/**
- * A simple [Fragment] subclass.
- * Use the [detailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class detailFragment : Fragment(R.layout.fragment_detail) {
-    //hanya menampilkan layout fragmen detail, belum diatur detailnya
+        val tvDetail = view.findViewById<TextView>(R.id.tv_detail)
+        val fullDescription = arguments?.getString("course_full_description") ?: ""
+        tvDetail.text = fullDescription
+
+        val tvContents = view.findViewById<TextView>(R.id.tv_content)
+        val courseContents = arguments?.getString("course_contents") ?: ""
+        tvContents.text = courseContents
+
+        return view
+    }
     }

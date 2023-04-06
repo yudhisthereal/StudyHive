@@ -11,11 +11,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text=""
-        android:textSize="30sp"
+        android:text="xxxxxx"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:id="@+id/tv_materi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Materi : "/>
+
+    <TextView
+        app:layout_goneMarginTop="5dp"
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:text="zzzzzz"
+        app:layout_constraintTop_toBottomOf="@id/tv_materi"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

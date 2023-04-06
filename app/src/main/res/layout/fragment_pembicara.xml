@@ -6,15 +6,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".detailFragment">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv1"
+        android:src="@color/grey"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
+        android:id="@+id/tv_pembicara1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="PEMBICARA"
-        android:textSize="30sp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="PEMBICARA1"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/iv1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintTop_toBottomOf="@id/iv1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="20dp"
+        android:src="@color/grey"/>
+
+    <TextView
+        android:id="@+id/tv_pembicara2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="156dp"
+        android:text="PEMBICARA2"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,11 +18,11 @@ class RegistrationTicketActivity : AppCompatActivity() {
         val title = intent.getStringExtra("course_title")
         tvJudulCourse.text = title
 
-        val tvStartDate = findViewById<TextView>(R.id.tv_tanggalmulai)
+        val tvStartDate = findViewById<TextView>(R.id.tv_tanggal_mulai)
         val startDate = intent.getStringExtra("course_startDate")
         tvStartDate.text = startDate
 
-        val tvEndDate = findViewById<TextView>(R.id.tv_tanggalselesai)
+        val tvEndDate = findViewById<TextView>(R.id.tv_tanggal_selesai)
         val endDate = intent.getStringExtra("course_endDate")
         tvEndDate.text = endDate
 

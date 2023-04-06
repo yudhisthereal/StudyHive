@@ -4,18 +4,22 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import com.yudhis.studyhive.ui.theme.*
+import java.util.*
 
 data class Course(
     val title : String,
     val fullDescription: String,
     val briefDescription: String,
     val image: Painter,
-    val rating: Float = 5f, // out of 5
+    val rating: String, // out of 5
     val prerequisites: List<String> = listOf(),
     val category: CourseCategory = CourseCategory.FrontEnd,
     val startDate: String = "",
     val endDate: String = "",
-    val tint: Color
+    val tint: Color,
+    val pembicara1: String,
+    val pembicara2: String,
+    val courseContents: String
 )
 
 enum class CourseCategory {

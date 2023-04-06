@@ -44,24 +44,50 @@ class CourseOverviewActivity : AppCompatActivity() {
         val pembicaraFragment = PembicaraFragment()
         val detailFragment = detailFragment()
 
-        //fragmen default menggunakan detail fragment
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flfragment, detailFragment)
-            commit()
+        val fullDescription = intent.getStringExtra("course_full_description")
+        val courseContents = intent.getStringExtra("course_contents")
+
+        val fragment = detailFragment().apply {
+            arguments = Bundle().apply {
+                putString("course_full_description", fullDescription)
+                putString("course_contents", courseContents)
+            }
         }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.flfragment, fragment)
+            .addToBackStack(null)
+            .commit()
+
         //TvDetail ditekan, frame layout menampilkan fragmen detail
         tvDetail.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flfragment, detailFragment)
-                commit()
+            val fragment = detailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("course_full_description", fullDescription)
+                    putString("course_contents", courseContents)
+                }
             }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.flfragment, fragment)
+                .addToBackStack(null)
+                .commit()
         }
         //tvPembicara ditekan, frame layout menampilkan fragmen pembicara
+        val pembicara1 = intent.getStringExtra("course_pembicara1")
+        val pembicara2 = intent.getStringExtra("course_pembicara2")
         tvPembicara.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flfragment, pembicaraFragment)
-                commit()
+            val fragment = PembicaraFragment().apply {
+                arguments = Bundle().apply {
+                    putString("course_pembicara1", pembicara1)
+                    putString("course_pembicara2", pembicara2)
+                }
             }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.flfragment, fragment)
+                .addToBackStack(null)
+                .commit()
         }
         //tvPersyaratan ditekan, frame layout menampilkan fragmen persyaratan
         tvPersyaratan.setOnClickListener {
@@ -78,6 +104,13 @@ class CourseOverviewActivity : AppCompatActivity() {
                 it.putExtra("course_title", title)
                 it.putExtra("course_startDate", startDate)
                 it.putExtra("course_endDate", endDate)
+                startActivity(it)
+            }
+        }
+
+        val btnBack = findViewById<Button>(R.id.bt_back)
+        btnBack.setOnClickListener {
+            Intent(this, MainActivity::class.java).also {
                 startActivity(it)
             }
         }

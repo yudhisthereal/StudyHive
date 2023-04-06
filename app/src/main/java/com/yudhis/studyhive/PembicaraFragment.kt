@@ -5,17 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class PembicaraFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_pembicara, container,false)
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PembicaraFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PembicaraFragment : Fragment(R.layout.fragment_pembicara) {
-    //hanya menampilkan layout fragmen pembicara, belum diatur pembicaranya
+        val tvPembicara1 = view.findViewById<TextView>(R.id.tv_pembicara1)
+        val namaPembicara1 = arguments?.getString("course_pembicara1") ?: ""
+        tvPembicara1.text = namaPembicara1
+
+        val tvPembicara2 = view.findViewById<TextView>(R.id.tv_pembicara2)
+        val namaPembicara2 = arguments?.getString("course_pembicara2") ?: ""
+        tvPembicara2.text = namaPembicara2
+
+        return view
+    }
 }

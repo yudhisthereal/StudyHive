@@ -64,26 +64,44 @@
                 android:layout_marginTop="5dp"/>
 
             <TextView
-                android:id="@+id/tv_tanggalmulai"
+                android:id="@+id/tv_mulai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Tanggal"
+                android:text="Start : "
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_event"
                 android:drawableStart="@drawable/ic_calendar"/>
 
             <TextView
-                android:id="@+id/tv_tanggalselesai"
+                android:id="@+id/tv_tanggal_mulai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="224dp"
+                android:text="xxxxx"
+                app:layout_constraintStart_toEndOf="@id/tv_mulai"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_selesai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Tanggal"
+                android:text="End   : "
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_tanggalmulai"
+                app:layout_constraintTop_toBottomOf="@+id/tv_mulai"
                 android:drawableStart="@drawable/ic_calendar"/>
+
+            <TextView
+                android:id="@+id/tv_tanggal_selesai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="260dp"
+                android:text="xxxxx"
+                app:layout_constraintStart_toEndOf="@id/tv_selesai"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_location"
@@ -110,7 +128,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_tanggalselesai"
+                app:layout_constraintTop_toBottomOf="@id/tv_selesai"
                 android:layout_marginTop="20dp"
                 android:text="Nama Pendaftar :"
                 app:layout_constraintStart_toStartOf="parent"
@@ -124,6 +142,15 @@
                 android:text="Nama Partisipan :"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="140dp"
+                android:layout_marginBottom="104dp"
+                android:text="xxxxxxxxxxxxx"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
