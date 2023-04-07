@@ -23,8 +23,8 @@ class CourseOverviewActivity : AppCompatActivity() {
         tvJudulCourse.text = title
 
         val tvRating = findViewById<TextView>(R.id.tv_2)
-        val rating = intent.getStringExtra("course_rating")
-        tvRating.text = rating.toString()
+        val rating = intent.getFloatExtra("course_rating", 0.0f)
+        tvRating.text = String.format("%.1f", rating)
 
         val tvStartDate = findViewById<TextView>(R.id.tv_3)
         val startDate = intent.getStringExtra("course_startDate")

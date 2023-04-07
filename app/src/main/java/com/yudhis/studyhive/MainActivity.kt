@@ -29,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var _courses: MutableSet<Course>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        supportActionBar?.hide()
         _auth = FirebaseAuth.getInstance()
         val user = _auth.currentUser
         val gsc = GoogleSignIn.getClient(this@MainActivity, GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -129,14 +130,17 @@ class MainActivity : AppCompatActivity() {
             "Unreal Engine 101",
             "Ethical Hacking"
         )
-        val fullDescriptions = setOf(
-            "This course will cover the basics of cyber security and help you become familiar with different types of cyber attacks and how to protect yourself against them.",
-            "This course is a comprehensive guide to using the Linux operating system, from the basics of installation and configuration to advanced topics like network administration and server management.",
-            "In this masterclass, you will learn everything you need to know to create beautiful and functional websites using WordPress, the world's most popular content management system.",
-            "If you've ever wanted to make your own video games, this course is for you. You'll learn how to use the Godot game engine to create 2D and 3D games from scratch, even if you have no prior experience with programming or game development.",
-            "Unreal Engine is one of the most popular game engines in the world, used by professional game developers to create blockbuster titles. In this course, you'll learn the basics of game development with Unreal Engine and create your own games.",
-            "This course will teach you how to use ethical hacking techniques to identify and exploit vulnerabilities in computer systems and networks. You'll learn how to use tools like Kali Linux and Metasploit to perform penetration testing and secure your own systems."
+        val locations = setOf(
+            "Bandung",
+            "Malang",
+            "Bekasi",
+            "Jakarta",
+            "Bogor",
+            "Padang",
+            "Denpasar",
+            "Pontianak"
         )
+
         val startDate = setOf(
             "1 Januari 2023",
             "2 februari 2023",
@@ -232,6 +236,7 @@ class MainActivity : AppCompatActivity() {
             val title = titles.elementAt(Random().nextInt(titles.size)) + " ID $i"
             val fullDescription = courseDescriptions[title.substringBefore(" ID")] ?: ""
             val contents = contentsMap[title.substringBefore(" ID")] ?: emptyList()
+            val location = locations.elementAt(Random().nextInt(locations.size))
 
             courses.add(
                 Course(
@@ -242,8 +247,10 @@ class MainActivity : AppCompatActivity() {
                     tint = randomColor(),
                     category = randomCourseCategory(),
                     rating = rating,
-                    startDate = startDate.elementAt(Random().nextInt(startDate.size)) ,
-                    endDate = endDate.elementAt(Random().nextInt(endDate.size)) ,
+                    fee = Random().nextInt(1_000_000),
+                    location = location,
+                    startDate = startDate.elementAt(Random().nextInt(startDate.size)),
+                    endDate = endDate.elementAt(Random().nextInt(endDate.size)),
                     pembicara1 = pembicara1[Random().nextInt(pembicara1.size)],
                     pembicara2 = pembicara2[Random().nextInt(pembicara2.size)],
                     courseContents = contents.joinToString("\n")
@@ -253,15 +260,16 @@ class MainActivity : AppCompatActivity() {
 
         coursesDataset = courses
     }
+
     @Composable
     fun MainUI(
-        user : FirebaseUser?,
-        modifier : Modifier,
+        user: FirebaseUser?,
+        modifier: Modifier,
         searchState: MutableState<TextFieldValue>
     ) {
         var searchQuery by remember { mutableStateOf("") }
         val context = LocalContext.current
-        var isSearching by remember{ mutableStateOf(false) }
+        var isSearching by remember { mutableStateOf(false) }
         var categoryFilter by remember { mutableStateOf(CourseCategory.All) }
         val locationFilterState = remember { mutableStateOf(TextFieldValue("")) }
         var feeFilterState by remember { mutableStateOf(feeRanges.first()) }
@@ -287,7 +295,7 @@ class MainActivity : AppCompatActivity() {
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 32.dp, top = 12.dp, bottom = 12.dp),
+                        modifier = Modifier.padding(start = 32.dp),
                         softWrap = true
                     )
                 }
@@ -312,7 +320,7 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         SearchBar(
                             searchState = searchState,
-                            onQueryChanged = {newQuery ->
+                            onQueryChanged = { newQuery ->
                                 searchState.value = newQuery
                             },
                             onSearch = { query ->
@@ -333,8 +341,7 @@ class MainActivity : AppCompatActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
                             SectionHeader(text = "Untukmu")
                             Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        else {
+                        } else {
                             val coursesSet: Set<Course> = filteredData(
                                 query = searchQuery,
                                 category = categoryFilter,
@@ -353,7 +360,7 @@ class MainActivity : AppCompatActivity() {
                             .fillMaxSize()
                     )
                     {
-                        Spacer(Modifier.height(512.dp))
+                        Spacer(Modifier.height(480.dp))
                         if (isSearching) {
                             Spacer(Modifier.height(256.dp))
                             FilterSheet(
@@ -388,19 +395,21 @@ class MainActivity : AppCompatActivity() {
                     CourseEntry(
                         courseData = courseData,
                         onEnrollClicked = {
-                            val intent = Intent(this@MainActivity, CourseOverviewActivity::class.java).apply {
+                            val intent = Intent(
+                                this@MainActivity,
+                                CourseOverviewActivity::class.java
+                            ).apply {
                                 putExtra("course_title", courseData.title)
                                 putExtra("course_brief_description", courseData.briefDescription)
                                 putExtra("course_full_description", courseData.fullDescription)
-                                putExtra("course_rating",courseData.rating)
-                                putExtra("course_endDate",courseData.endDate)
-                                putExtra("course_startDate",courseData.startDate)
+                                putExtra("course_rating", courseData.rating)
+                                putExtra("course_endDate", courseData.endDate)
+                                putExtra("course_startDate", courseData.startDate)
                                 putExtra("course_pembicara1", courseData.pembicara1)
                                 putExtra("course_pembicara2", courseData.pembicara2)
                                 putExtra("course_contents", courseData.courseContents)
                             }
                             startActivity(intent)
-
                         }
                     )
                 }
@@ -411,7 +420,7 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun DiscoverCoursesAndEvents(items: List<Course>) {
         LazyRow {
-            items(items) {item ->
+            items(items) { item ->
                 MyCard(
                     size = Medium,
                     cornerRadius = 8.dp,
@@ -433,7 +442,7 @@ class MainActivity : AppCompatActivity() {
     ) {
 //        val context = LocalContext.current.applicationContext
         val focusManager = LocalFocusManager.current
-        var hasFocus by remember {mutableStateOf(false)}
+        var hasFocus by remember { mutableStateOf(false) }
         val keyboardState by keyboardAsState()
 
         OutlinedTextField(
@@ -453,7 +462,7 @@ class MainActivity : AppCompatActivity() {
                     tint = MaterialTheme.colors.onBackground
                 )
             },
-            placeholder = {Text(text = "Cari Kursus atau Event", color = Gray500)},
+            placeholder = { Text(text = "Cari Kursus atau Event", color = Gray500) },
             singleLine = true,
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
@@ -482,7 +491,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun Greeting(user : FirebaseUser?) {
+    fun Greeting(user: FirebaseUser?) {
 
         Text(
             text = "Welcome,",
@@ -501,7 +510,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainAppBar(coroutineScope: CoroutineScope, scaffoldState : ScaffoldState) {
+    fun MainAppBar(coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
         AppBar(
             onMenuClicked = {
                 coroutineScope.launch {
@@ -512,8 +521,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun LogoutConfirmation(onDismiss : () -> Unit, gsc : GoogleSignInClient)
-    {
+    fun LogoutConfirmation(onDismiss: () -> Unit, gsc: GoogleSignInClient) {
         Dialog(
             onDismissRequest = { onDismiss() },
             content = {
@@ -579,7 +587,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainDrawerMenu(confirmLogout : () -> Unit) {
+    fun MainDrawerMenu(confirmLogout: () -> Unit) {
 
         DrawerBody(
             items = listOf(
@@ -629,7 +637,7 @@ class MainActivity : AppCompatActivity() {
                         TODO("not yet implemented: go to courses history activity")
                     }
                     "logout" -> {
-                         confirmLogout()
+                        confirmLogout()
                     }
                 }
             }
@@ -637,7 +645,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun SectionHeader(text:String, textAlign: TextAlign = TextAlign.Start) {
+    fun SectionHeader(text: String, textAlign: TextAlign = TextAlign.Start) {
         Text(
             text = text,
             fontSize = 24.sp,
@@ -654,8 +662,8 @@ class MainActivity : AppCompatActivity() {
         onCategoryFilterUpdate: (CourseCategory) -> Unit,
         selectedCategory: CourseCategory?,
         locationFilterState: MutableState<TextFieldValue>,
-        onLocationFilterUpdate: (locationFilter:TextFieldValue) -> Unit,
-        onFeeFilterUpdate: (feeRange:FeeRange) -> Unit,
+        onLocationFilterUpdate: (locationFilter: TextFieldValue) -> Unit,
+        onFeeFilterUpdate: (feeRange: FeeRange) -> Unit,
         onOnlineOfflineFilterUpdate: (onlineOfflineFilter: OnlineOrOffline) -> Unit
     ) {
         var feeFilterDropdownExpanded by remember { mutableStateOf(false) }
@@ -666,7 +674,7 @@ class MainActivity : AppCompatActivity() {
 
         //location filter TextField focus management
         val focusManager = LocalFocusManager.current
-        var hasFocus by remember {mutableStateOf(false)}
+        var hasFocus by remember { mutableStateOf(false) }
         val keyboardState by keyboardAsState()
 
         BottomSheetScaffold(
@@ -685,7 +693,7 @@ class MainActivity : AppCompatActivity() {
                             .wrapContentHeight()
                     )
                     {
-                        for(category in CourseCategory.values()) {
+                        for (category in CourseCategory.values()) {
                             TagButton(
                                 category = category,
                                 onClick = {
@@ -726,10 +734,12 @@ class MainActivity : AppCompatActivity() {
                                             hasFocus = it.hasFocus
                                         }, 1500)
                                     }
-                                    .fillMaxWidth(),
+                                    .scale(0.8f),
                                 colors = TextFieldDefaults.outlinedTextFieldColors(
                                     focusedBorderColor = MaterialTheme.colors.onBackground,
-                                    unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(ContentAlpha.high),
+                                    unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(
+                                        ContentAlpha.high
+                                    ),
                                     cursorColor = MaterialTheme.colors.onBackground
                                 ),
                                 shape = RoundedCornerShape(32.dp)
@@ -749,18 +759,18 @@ class MainActivity : AppCompatActivity() {
                                 Text(
                                     text = displayFeeRange,
                                     modifier = Modifier
-                                        .padding(horizontal = 8.dp, vertical = 4.dp)
                                         .border(
                                             width = 1.dp,
                                             color = MaterialTheme.colors.onBackground,
                                             shape = RoundedCornerShape(16.dp)
-                                        ),
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 5.dp),
                                     color = MaterialTheme.colors.onBackground
                                 )
                                 Icon(
                                     imageVector =
-                                        if (!feeFilterDropdownExpanded) Icons.Default.ArrowDropDown
-                                        else Icons.Default.KeyboardArrowUp,
+                                    if (!feeFilterDropdownExpanded) Icons.Default.ArrowDropDown
+                                    else Icons.Default.KeyboardArrowUp,
                                     modifier = Modifier
                                         .clickable(onClick = {
                                             feeFilterDropdownExpanded = true
@@ -775,17 +785,17 @@ class MainActivity : AppCompatActivity() {
                                     feeFilterDropdownExpanded = false
                                 },
                             ) {
-                                feeRanges.forEach {feeRange ->
+                                feeRanges.forEach { feeRange ->
                                     val bottomLimit =
                                         if (feeRange.bottomLimit < 1_000_000)
-                                            "${feeRange.bottomLimit/1000}K"
+                                            "${feeRange.bottomLimit / 1000}K"
                                         else
-                                            "${feeRange.bottomLimit/1_000_000}Jt"
+                                            "${feeRange.bottomLimit / 1_000_000}Jt"
                                     val topLimit =
                                         if (feeRange.topLimit < 1_000_000)
-                                            "${feeRange.topLimit/1000}K"
+                                            "${feeRange.topLimit / 1000}K"
                                         else
-                                            "${feeRange.topLimit/1_000_000}Jt"
+                                            "${feeRange.topLimit / 1_000_000}Jt"
                                     DropdownMenuItem(
                                         onClick = {
                                             onFeeFilterUpdate(feeRange)
@@ -793,14 +803,16 @@ class MainActivity : AppCompatActivity() {
                                             displayFeeRange = "$bottomLimit - $topLimit"
                                         }) {
 
-                                        Text(text =
-                                            if (topLimit != "0K") "$bottomLimit - $topLimit"
+                                        Text(
+                                            text =
+                                            if (feeRange.topLimit > 0) "$bottomLimit - $topLimit"
                                             else "All Ranges"
                                         )
                                     }
                                 }
                             }
                         }
+                        //online or offline filter update
                         Column() {
                             /* TODO */
                         }
@@ -878,10 +890,10 @@ class MainActivity : AppCompatActivity() {
     fun Void() {
         Text("")
     }
-//    @Preview(showBackground = true)
+
+    //    @Preview(showBackground = true)
     @Composable
-    fun AppPreview()
-    {
+    fun AppPreview() {
         Surface(
             elevation = 4.dp,
             modifier = Modifier
@@ -923,11 +935,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     @Preview(showBackground = true)
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     fun BottomSheetPreview() {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(24.dp)
+        ) {
             FlowRow(
                 horizontalArrangement = Arrangement.Center,
                 maxItemsInEachRow = 4,
@@ -936,7 +952,7 @@ class MainActivity : AppCompatActivity() {
                     .wrapContentHeight()
             )
             {
-                for(category in CourseCategory.values()) {
+                for (category in CourseCategory.values()) {
                     TagButton(
                         category = category,
                         onClick = {
@@ -949,14 +965,17 @@ class MainActivity : AppCompatActivity() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Max)
+                    .padding(24.dp)
             ) {
-                Column() {
-                    //Location Filter
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    // Location Filter
                     OutlinedTextField(
-                        value = TextFieldValue(""),
+                        value = "",
                         onValueChange = {
-
                         },
                         label = {
                             Text(text = "Lokasi")
@@ -964,30 +983,73 @@ class MainActivity : AppCompatActivity() {
                         placeholder = {
                             Text(text = "e.g. Bandung")
                         },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = MaterialTheme.colors.onBackground,
+                            unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(
+                                ContentAlpha.high
+                            ),
+                            cursorColor = MaterialTheme.colors.onBackground
+                        ),
+                        shape = RoundedCornerShape(32.dp)
                     )
 
-                    //Fee Filter
-                    var displayFeeRange by remember {mutableStateOf("All")}
-                    var expanded by remember {mutableStateOf(false)}
-                    OutlinedButton(onClick = { expanded = !expanded }) {
-                        Text(text = displayFeeRange)
+                    // Fee Filter
+                    var displayFeeRange: String by remember { mutableStateOf("All Ranges") }
+                    // Fee Range Opener
+                    Row(
+                        Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = displayFeeRange,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colors.onBackground,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            color = MaterialTheme.colors.onBackground
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Open Fee Range Options"
+                        )
                     }
+                    // Options
                     DropdownMenu(
-                        expanded = expanded,
+                        expanded = true,
                         onDismissRequest = {
-                            expanded = false
                         },
                     ) {
-                        feeRanges.forEach {
+                        feeRanges.forEach { feeRange ->
+                            val bottomLimit =
+                                if (feeRange.bottomLimit < 1_000_000)
+                                    "${feeRange.bottomLimit / 1000}K"
+                                else
+                                    "${feeRange.bottomLimit / 1_000_000}Jt"
+                            val topLimit =
+                                if (feeRange.topLimit < 1_000_000)
+                                    "${feeRange.topLimit / 1000}K"
+                                else
+                                    "${feeRange.topLimit / 1_000_000}Jt"
                             DropdownMenuItem(
                                 onClick = {
-                                    displayFeeRange = "\"${it.bottomLimit} - ${it.topLimit}\""
+                                    displayFeeRange = "$bottomLimit - $topLimit"
                                 }) {
-                                Text(text = "${it.bottomLimit} - ${it.topLimit}")
+
+                                Text(
+                                    text =
+                                    if (topLimit != "0K") "$bottomLimit - $topLimit"
+                                    else "All Ranges"
+                                )
                             }
                         }
                     }
                 }
+                //online or offline filter update
                 Column() {
                     /* TODO */
                 }
