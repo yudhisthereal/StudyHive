@@ -11,7 +11,10 @@ data class Course(
     val fullDescription: String,
     val briefDescription: String,
     val image: Painter,
-    val rating: String, // out of 5
+    val fee: Int = 50_000,
+    val location: String = "",
+    val onlineOrOffline: OnlineOrOffline = OnlineOrOffline.Online,
+    val rating: Float = 5f, // out of 5
     val prerequisites: List<String> = listOf(),
     val category: CourseCategory = CourseCategory.FrontEnd,
     val startDate: String = "",

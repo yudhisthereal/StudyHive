@@ -15,11 +15,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.PopupProperties
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -48,8 +53,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.yudhis.studyhive.composeables.*
 import com.yudhis.studyhive.data.coursesDataset
-import com.yudhis.studyhive.data.filteredDataByCategory
-import com.yudhis.studyhive.data.filteredDataByQuery
+import com.yudhis.studyhive.data.filteredData
 import com.yudhis.studyhive.dataclass.MenuItem
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 import com.yudhis.studyhive.ui.theme.Transparent
@@ -65,7 +69,7 @@ import androidx.fragment.app.FragmentManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _auth: FirebaseAuth
-    private lateinit var _courses: MutableList<Course>
+    private lateinit var _courses: MutableSet<Course>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -116,8 +120,8 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun GenerateDummyCourses() {
-        val courses = mutableListOf<Course>()
-        val titles = listOf(
+        val courses = mutableSetOf<Course>()
+        val titles = setOf(
             "Cyber Security Basics",
             "Linux Full Guide",
             "Wordpress Masterclass",
@@ -125,8 +129,15 @@ class MainActivity : AppCompatActivity() {
             "Unreal Engine 101",
             "Ethical Hacking"
         )
-
-        val startDate = listOf<String>(
+        val fullDescriptions = setOf(
+            "This course will cover the basics of cyber security and help you become familiar with different types of cyber attacks and how to protect yourself against them.",
+            "This course is a comprehensive guide to using the Linux operating system, from the basics of installation and configuration to advanced topics like network administration and server management.",
+            "In this masterclass, you will learn everything you need to know to create beautiful and functional websites using WordPress, the world's most popular content management system.",
+            "If you've ever wanted to make your own video games, this course is for you. You'll learn how to use the Godot game engine to create 2D and 3D games from scratch, even if you have no prior experience with programming or game development.",
+            "Unreal Engine is one of the most popular game engines in the world, used by professional game developers to create blockbuster titles. In this course, you'll learn the basics of game development with Unreal Engine and create your own games.",
+            "This course will teach you how to use ethical hacking techniques to identify and exploit vulnerabilities in computer systems and networks. You'll learn how to use tools like Kali Linux and Metasploit to perform penetration testing and secure your own systems."
+        )
+        val startDate = setOf(
             "1 Januari 2023",
             "2 februari 2023",
             "3 Maret 2023",
@@ -135,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             "6 Juni 2023"
         )
 
-        val endDate = listOf<String>(
+        val endDate = setOf(
             "1 Juli 2023",
             "2 Agustus 2023",
             "3 September 2023",
@@ -144,7 +155,7 @@ class MainActivity : AppCompatActivity() {
             "6 Desember 2023"
         )
 
-        val rating = String.format("%.1f", Random().nextFloat() * (5.0f - 1.0f) + 1.0f)
+        val rating = Random().nextFloat() * (5.0f - 1.0f) + 1.0f
 
         val courseDescriptions = mapOf(
             "Cyber Security Basics" to "This course will cover the basics of cyber security and help you become familiar with different types of cyber attacks and how to protect yourself against them.",
@@ -218,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         for (i in 1 until 127) {
-            val title = titles[Random().nextInt(titles.size)] + " ID $i"
+            val title = titles.elementAt(Random().nextInt(titles.size)) + " ID $i"
             val fullDescription = courseDescriptions[title.substringBefore(" ID")] ?: ""
             val contents = contentsMap[title.substringBefore(" ID")] ?: emptyList()
 
@@ -231,14 +242,15 @@ class MainActivity : AppCompatActivity() {
                     tint = randomColor(),
                     category = randomCourseCategory(),
                     rating = rating,
-                    startDate = startDate[Random().nextInt(startDate.size)] ,
-                    endDate = endDate[Random().nextInt(endDate.size)] ,
+                    startDate = startDate.elementAt(Random().nextInt(startDate.size)) ,
+                    endDate = endDate.elementAt(Random().nextInt(endDate.size)) ,
                     pembicara1 = pembicara1[Random().nextInt(pembicara1.size)],
                     pembicara2 = pembicara2[Random().nextInt(pembicara2.size)],
                     courseContents = contents.joinToString("\n")
                 )
             )
         }
+
         coursesDataset = courses
     }
     @Composable
@@ -251,6 +263,9 @@ class MainActivity : AppCompatActivity() {
         val context = LocalContext.current
         var isSearching by remember{ mutableStateOf(false) }
         var categoryFilter by remember { mutableStateOf(CourseCategory.All) }
+        val locationFilterState = remember { mutableStateOf(TextFieldValue("")) }
+        var feeFilterState by remember { mutableStateOf(feeRanges.first()) }
+        var onlineOfflineFilterState by remember { mutableStateOf(OnlineOrOffline.All) }
         BackHandler(isSearching) {
             isSearching = false
             searchQuery = ""
@@ -265,13 +280,14 @@ class MainActivity : AppCompatActivity() {
             {
                 if (!isSearching) {
                     Greeting(user)
+                    Spacer(modifier = Modifier.height(10.dp))
                 } else {
                     Text(
                         text = user?.displayName.toString() + "!",
-                        fontSize = 24.sp,
+                        fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 32.dp),
+                        modifier = Modifier.padding(start = 32.dp, top = 12.dp, bottom = 12.dp),
                         softWrap = true
                     )
                 }
@@ -308,10 +324,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         )
-                        Spacer(
-                            modifier = Modifier
-                                .height(32.dp)
-                        )
+                        Spacer(modifier = Modifier.height(32.dp))
 
                         if (!isSearching) {
                             _courses = coursesDataset
@@ -322,9 +335,14 @@ class MainActivity : AppCompatActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                         else {
-                            val coursesSet: Set<Course> = filteredDataByCategory(categoryFilter).toSet()
-                                .intersect(filteredDataByQuery(searchQuery).toSet())
-                            _courses = coursesSet.toMutableList()
+                            val coursesSet: Set<Course> = filteredData(
+                                query = searchQuery,
+                                category = categoryFilter,
+                                location = locationFilterState.value.text,
+                                feeRange = feeFilterState,
+                                onlineOrOffline = onlineOfflineFilterState
+                            )
+                            _courses = coursesSet.toMutableSet()
                             SectionHeader(text = "Hasil Pencarian")
                             Spacer(modifier = Modifier.height(16.dp))
                         }
@@ -337,11 +355,22 @@ class MainActivity : AppCompatActivity() {
                     {
                         Spacer(Modifier.height(512.dp))
                         if (isSearching) {
+                            Spacer(Modifier.height(256.dp))
                             FilterSheet(
-                                onFilterUpdate = {
+                                onCategoryFilterUpdate = {
                                     categoryFilter = it
                                 },
-                                selectedCategory = categoryFilter
+                                selectedCategory = categoryFilter,
+                                locationFilterState = locationFilterState,
+                                onLocationFilterUpdate = {
+                                    locationFilterState.value = it
+                                },
+                                onFeeFilterUpdate = {
+                                    feeFilterState = it
+                                },
+                                onOnlineOfflineFilterUpdate = {
+                                    onlineOfflineFilterState = it
+                                }
                             )
                         }
                     }
@@ -434,7 +463,7 @@ class MainActivity : AppCompatActivity() {
                 .onFocusChanged {
                     Handler(Looper.getMainLooper()).postDelayed({
                         hasFocus = it.hasFocus
-                    }, 1000)
+                    }, 1500)
                     onFocusChanged(it.hasFocus)
                 },
             keyboardOptions = KeyboardOptions(
@@ -506,10 +535,7 @@ class MainActivity : AppCompatActivity() {
                             fontWeight = FontWeight.Normal,
                             fontSize = 16.sp
                         )
-                        Spacer(
-                            modifier = Modifier
-                                .height(16.dp)
-                        )
+                        Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -576,6 +602,12 @@ class MainActivity : AppCompatActivity() {
                     icon = ImageVector.vectorResource(id = R.drawable.ic_people)
                 ),
                 MenuItem(
+                    id = "course_history",
+                    text = "Riwayat Pelatihan",
+                    description = "Courses You've Taken",
+                    icon = ImageVector.vectorResource(id = R.drawable.ic_history)
+                ),
+                MenuItem(
                     id = "logout",
                     text = "Keluar",
                     description = "Sign out from StudyHive",
@@ -592,6 +624,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     "participants" -> {
                         TODO("not yet implemented")
+                    }
+                    "course_history" -> {
+                        TODO("not yet implemented: go to courses history activity")
                     }
                     "logout" -> {
                          confirmLogout()
@@ -615,34 +650,160 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
     @Composable
-    fun FilterSheet(onFilterUpdate: (CourseCategory) -> Unit, selectedCategory: CourseCategory?) {
+    fun FilterSheet(
+        onCategoryFilterUpdate: (CourseCategory) -> Unit,
+        selectedCategory: CourseCategory?,
+        locationFilterState: MutableState<TextFieldValue>,
+        onLocationFilterUpdate: (locationFilter:TextFieldValue) -> Unit,
+        onFeeFilterUpdate: (feeRange:FeeRange) -> Unit,
+        onOnlineOfflineFilterUpdate: (onlineOfflineFilter: OnlineOrOffline) -> Unit
+    ) {
+        var feeFilterDropdownExpanded by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
         val sheetState = rememberBottomSheetScaffoldState(
             bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
         )
 
+        //location filter TextField focus management
+        val focusManager = LocalFocusManager.current
+        var hasFocus by remember {mutableStateOf(false)}
+        val keyboardState by keyboardAsState()
+
         BottomSheetScaffold(
             scaffoldState = sheetState,
             sheetContent = {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                ) {
                     FilterSheetOpener(scope = coroutineScope, state = sheetState)
                     FlowRow(
                         horizontalArrangement = Arrangement.Center,
                         maxItemsInEachRow = 4,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
+                            .wrapContentHeight()
                     )
                     {
                         for(category in CourseCategory.values()) {
                             TagButton(
                                 category = category,
                                 onClick = {
-                                    onFilterUpdate(category)
+                                    onCategoryFilterUpdate(category)
                                 },
                                 selected = (selectedCategory == category)
                             )
                         }
                         Spacer(Modifier.height(16.dp))
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            // Location Filter
+                            OutlinedTextField(
+                                value = locationFilterState.value,
+                                onValueChange = {
+                                    locationFilterState.value = it
+                                    onLocationFilterUpdate(locationFilterState.value)
+                                },
+                                label = {
+                                    Text(text = "Lokasi")
+                                },
+                                placeholder = {
+                                    Text(text = "e.g. Bandung")
+                                },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .onFocusChanged {
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            hasFocus = it.hasFocus
+                                        }, 1500)
+                                    }
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    focusedBorderColor = MaterialTheme.colors.onBackground,
+                                    unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(ContentAlpha.high),
+                                    cursorColor = MaterialTheme.colors.onBackground
+                                ),
+                                shape = RoundedCornerShape(32.dp)
+                            )
+
+                            BackHandler(hasFocus && keyboardState == Keyboard.Closed) {
+                                focusManager.clearFocus()
+                                hasFocus = false
+                            }
+
+                            // Fee Filter
+                            var displayFeeRange: String by remember { mutableStateOf("All Ranges") }
+                            // Fee Range Opener
+                            Row(
+                                Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = displayFeeRange,
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colors.onBackground,
+                                            shape = RoundedCornerShape(16.dp)
+                                        ),
+                                    color = MaterialTheme.colors.onBackground
+                                )
+                                Icon(
+                                    imageVector =
+                                        if (!feeFilterDropdownExpanded) Icons.Default.ArrowDropDown
+                                        else Icons.Default.KeyboardArrowUp,
+                                    modifier = Modifier
+                                        .clickable(onClick = {
+                                            feeFilterDropdownExpanded = true
+                                        }),
+                                    contentDescription = "Open Fee Range Options"
+                                )
+                            }
+                            // Options
+                            DropdownMenu(
+                                expanded = feeFilterDropdownExpanded,
+                                onDismissRequest = {
+                                    feeFilterDropdownExpanded = false
+                                },
+                            ) {
+                                feeRanges.forEach {feeRange ->
+                                    val bottomLimit =
+                                        if (feeRange.bottomLimit < 1_000_000)
+                                            "${feeRange.bottomLimit/1000}K"
+                                        else
+                                            "${feeRange.bottomLimit/1_000_000}Jt"
+                                    val topLimit =
+                                        if (feeRange.topLimit < 1_000_000)
+                                            "${feeRange.topLimit/1000}K"
+                                        else
+                                            "${feeRange.topLimit/1_000_000}Jt"
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            onFeeFilterUpdate(feeRange)
+                                            feeFilterDropdownExpanded = false
+                                            displayFeeRange = "$bottomLimit - $topLimit"
+                                        }) {
+
+                                        Text(text =
+                                            if (topLimit != "0K") "$bottomLimit - $topLimit"
+                                            else "All Ranges"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        Column() {
+                            /* TODO */
+                        }
                     }
                 }
             },
@@ -697,7 +858,7 @@ class MainActivity : AppCompatActivity() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp)
+                .height(48.dp)
                 .background(Transparent),
             contentAlignment = Alignment.Center
         ) {
@@ -717,7 +878,7 @@ class MainActivity : AppCompatActivity() {
     fun Void() {
         Text("")
     }
-    @Preview(showBackground = true)
+//    @Preview(showBackground = true)
     @Composable
     fun AppPreview()
     {
@@ -737,10 +898,7 @@ class MainActivity : AppCompatActivity() {
                 Text(
                     text = "Keluar dari StudyHive?"
                 )
-                Spacer(
-                    modifier = Modifier
-                        .height(16.dp)
-                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
@@ -765,7 +923,79 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    @Preview(showBackground = true)
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable
+    fun BottomSheetPreview() {
+        Column {
+            FlowRow(
+                horizontalArrangement = Arrangement.Center,
+                maxItemsInEachRow = 4,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            )
+            {
+                for(category in CourseCategory.values()) {
+                    TagButton(
+                        category = category,
+                        onClick = {
+                        },
+                        selected = false
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max)
+            ) {
+                Column() {
+                    //Location Filter
+                    OutlinedTextField(
+                        value = TextFieldValue(""),
+                        onValueChange = {
+
+                        },
+                        label = {
+                            Text(text = "Lokasi")
+                        },
+                        placeholder = {
+                            Text(text = "e.g. Bandung")
+                        },
+                    )
+
+                    //Fee Filter
+                    var displayFeeRange by remember {mutableStateOf("All")}
+                    var expanded by remember {mutableStateOf(false)}
+                    OutlinedButton(onClick = { expanded = !expanded }) {
+                        Text(text = displayFeeRange)
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {
+                            expanded = false
+                        },
+                    ) {
+                        feeRanges.forEach {
+                            DropdownMenuItem(
+                                onClick = {
+                                    displayFeeRange = "\"${it.bottomLimit} - ${it.topLimit}\""
+                                }) {
+                                Text(text = "${it.bottomLimit} - ${it.topLimit}")
+                            }
+                        }
+                    }
+                }
+                Column() {
+                    /* TODO */
+                }
+            }
+        }
+    }
 }
+
 
 
 
