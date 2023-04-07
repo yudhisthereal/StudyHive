@@ -83,7 +83,9 @@ fun Preview() {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             // The List
-                            LazyColumn {
+                            LazyColumn(
+                                horizontalAlignment = Alignment.End
+                            ) {
                                 for (i in 1 until 6) {
                                     item {
                                         ParticipantListItem(pName = "Participant $i")
@@ -105,8 +107,9 @@ fun Preview() {
                             // Back and Save Buttons
                             Row(
                                 modifier = Modifier
-                                    .fillMaxHeight(),
-                                verticalAlignment = Alignment.Bottom
+                                    .fillMaxSize(),
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 //Back Button
                                 Button(
