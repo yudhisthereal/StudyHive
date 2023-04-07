@@ -14,14 +14,14 @@
         android:theme="@style/Theme.StudyHive"
         tools:targetApi="31">
         <activity
-            android:name=".ParticipantRegistrationActivity"
-            android:exported="false"
-            android:label="@string/title_activity_participant_registration"
-            android:theme="@style/Theme.StudyHive" />
-        <activity
             android:name=".ParticipantListActivity"
             android:exported="false"
             android:label="@string/title_activity_participant_list"
+            android:theme="@style/Theme.StudyHive" />
+        <activity
+            android:name=".ParticipantDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_participant_detail"
             android:theme="@style/Theme.StudyHive" />
         <activity
             android:name=".ComposeTEst"
@@ -59,9 +59,6 @@
             android:launchMode="singleInstance" />
         <activity
             android:name=".RegistrationTicketActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ParticipantDetailActivity"
             android:exported="true" />
         <activity
             android:name=".AccountInfoActivity"

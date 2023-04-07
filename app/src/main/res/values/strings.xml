@@ -29,5 +29,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_compose_test">ComposeTEst</string>
     <string name="title_activity_participant_list">ParticipantListActivity</string>
-    <string name="title_activity_participant_registration">ParticipantRegistrationActivity</string>
+    <string name="title_activity_participant_detail">ParticipantDetailActivity</string>
 </resources>

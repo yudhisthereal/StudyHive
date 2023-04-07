@@ -95,6 +95,9 @@ class MainActivity : AppCompatActivity() {
                             MainDrawerMenu(
                                 confirmLogout = {
                                     logoutConfOpen = true
+                                },
+                                onNavigate = {
+                                    coroutineScope.launch { scaffoldState.drawerState.close() }
                                 }
                             )
                         },
@@ -587,16 +590,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainDrawerMenu(confirmLogout: () -> Unit) {
+    fun MainDrawerMenu(confirmLogout: () -> Unit, onNavigate: () -> Unit) {
 
         DrawerBody(
             items = listOf(
-//                                    MenuItem(
-//                                        id = "dashboard",
-//                                        text = "Home",
-//                                        description = "go to dashboard",
-//                                        icon = Icons.Rounded.Home
-//                                    ),
                 MenuItem(
                     id = "account_info",
                     text = "Info Akun",
@@ -631,7 +628,9 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     "participants" -> {
-                        TODO("not yet implemented")
+                        val intent = Intent(this, ParticipantListActivity::class.java)
+                        startActivity(intent)
+                        onNavigate()
                     }
                     "course_history" -> {
                         TODO("not yet implemented: go to courses history activity")
