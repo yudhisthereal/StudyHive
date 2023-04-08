@@ -31,7 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.yudhis.studyhive.composeables.HistoryEntry
+import com.yudhis.studyhive.data.saveUserData
 import com.yudhis.studyhive.data.userData
 import com.yudhis.studyhive.dataclass.Course
 import com.yudhis.studyhive.dataclass.selectedParticipantID
@@ -51,15 +55,15 @@ class ParticipantDetailActivity : ComponentActivity() {
                 val context = LocalContext.current.applicationContext
                 var pNickName by remember {mutableStateOf(userData.participants[selectedParticipantID]?.pNickName as String)}
                 var pFullName by remember {mutableStateOf(userData.participants[selectedParticipantID]?.pName as String)}
-                var pAddress by remember {mutableStateOf(userData.participants[selectedParticipantID]?.address as String)}
-                var pBirthDate by remember {mutableStateOf(userData.participants[selectedParticipantID]?.birthdate as String)}
-                var uiState by remember {mutableStateOf<UIState>(UIState.DETAIL)}
-
+                var pAddress by remember {mutableStateOf(userData.participants[selectedParticipantID]?.pAddress as String)}
+                var pBirthDate by remember {mutableStateOf(userData.participants[selectedParticipantID]?.pBirthdate as String)}
+                var uiState by remember {mutableStateOf(UIState.DETAIL)}
                 when (uiState) {
                     UIState.DETAIL -> {
                         BackHandler(true) {
                             val intent = Intent(this, ParticipantListActivity::class.java)
                             startActivity(intent)
+                            saveUserData()
                             finish()
                         }
                         Column(
@@ -406,9 +410,9 @@ class ParticipantDetailActivity : ComponentActivity() {
                                                     pFullName
                                                 userData.participants[selectedParticipantID]?.pNickName =
                                                     pNickName
-                                                userData.participants[selectedParticipantID]?.address =
+                                                userData.participants[selectedParticipantID]?.pAddress =
                                                     pAddress
-                                                userData.participants[selectedParticipantID]?.birthdate =
+                                                userData.participants[selectedParticipantID]?.pBirthdate =
                                                     pBirthDate
                                             }
                                             else {
@@ -540,7 +544,7 @@ class ParticipantDetailActivity : ComponentActivity() {
                                     }
                                 }
                                 Spacer(Modifier.height(16.dp))
-                                CourseHistory(history = userData.participants[selectedParticipantID]?.course_history as MutableList<Course>)
+                                CourseHistory(history = userData.participants[selectedParticipantID]?.courseHistory as MutableList<Course>)
                             }
                         }
                     }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,10 +32,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -81,8 +82,7 @@ class MainActivity : AppCompatActivity() {
                         mutableStateOf(false)
                     }
 
-                    //create dummy participants for this session
-                    if (!participantsGenerated) userData.participants = dummyParticipants()
+                    loadUserData()
 
                     Scaffold(
                         scaffoldState = scaffoldState,
@@ -117,6 +117,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveUserData()
     }
 
     @Composable
@@ -250,6 +255,7 @@ class MainActivity : AppCompatActivity() {
                     rating = rating,
                     fee = Random().nextInt(1_000_000),
                     location = location,
+                    onlineOrOffline = if (Random().nextBoolean()) OnlineOrOffline.Online else OnlineOrOffline.Offline,
                     startDate = startDate.elementAt(Random().nextInt(startDate.size)),
                     endDate = endDate.elementAt(Random().nextInt(endDate.size)),
                     pembicara1 = pembicara1[Random().nextInt(pembicara1.size)],
@@ -262,7 +268,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainUI(
+    private fun MainUI(
         user: FirebaseUser?,
         modifier: Modifier,
         searchState: MutableState<TextFieldValue>
@@ -355,31 +361,24 @@ class MainActivity : AppCompatActivity() {
                         }
                         CourseSuggestions(_courses.toList())
                     }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
-                    {
-                        Spacer(Modifier.height(480.dp))
-                        if (isSearching) {
-                            Spacer(Modifier.height(256.dp))
-                            FilterSheet(
-                                onCategoryFilterUpdate = {
-                                    categoryFilter = it
-                                },
-                                selectedCategory = categoryFilter,
-                                locationFilterState = locationFilterState,
-                                onLocationFilterUpdate = {
-                                    locationFilterState.value = it
-                                },
-                                onFeeFilterUpdate = {
-                                    feeFilterState = it
-                                },
-                                onOnlineOfflineFilterUpdate = {
-                                    onlineOfflineFilterState = it
-                                }
-                            )
-                        }
+
+                    if (isSearching) {
+                        FilterSheet(
+                            onCategoryFilterUpdate = {
+                                categoryFilter = it
+                            },
+                            selectedCategory = categoryFilter,
+                            locationFilterState = locationFilterState,
+                            onLocationFilterUpdate = {
+                                locationFilterState.value = it
+                            },
+                            onFeeFilterUpdate = {
+                                feeFilterState = it
+                            },
+                            onOnlineOfflineFilterUpdate = {
+                                onlineOfflineFilterState = it
+                            }
+                        )
                     }
                 }
             }
@@ -673,161 +672,213 @@ class MainActivity : AppCompatActivity() {
         val focusManager = LocalFocusManager.current
         var hasFocus by remember { mutableStateOf(false) }
         val keyboardState by keyboardAsState()
-
-        BottomSheetScaffold(
-            scaffoldState = sheetState,
-            sheetContent = {
-                Column(
-                    modifier = Modifier
-                        .padding(24.dp)
-                ) {
-                    FilterSheetOpener(scope = coroutineScope, state = sheetState)
-                    FlowRow(
-                        horizontalArrangement = Arrangement.Center,
-                        maxItemsInEachRow = 4,
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(Modifier.height(256.dp))
+            BottomSheetScaffold(
+                scaffoldState = sheetState,
+                sheetContent = {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    )
-                    {
-                        for (category in CourseCategory.values()) {
-                            TagButton(
-                                category = category,
-                                onClick = {
-                                    onCategoryFilterUpdate(category)
-                                },
-                                selected = (selectedCategory == category)
-                            )
-                        }
-                        Spacer(Modifier.height(16.dp))
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
                             .padding(24.dp)
                     ) {
-                        Column(
+                        FilterSheetOpener(scope = coroutineScope, state = sheetState, {})
+                        Spacer(Modifier.height(24.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.Center,
+                            maxItemsInEachRow = 4,
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.Start
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        )
+                        {
+                            for (category in CourseCategory.values()) {
+                                TagButton(
+                                    category = category,
+                                    onClick = {
+                                        onCategoryFilterUpdate(category)
+                                    },
+                                    selected = (selectedCategory == category)
+                                )
+                            }
+                            Spacer(Modifier.height(16.dp))
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp)
                         ) {
-                            // Location Filter
-                            OutlinedTextField(
-                                value = locationFilterState.value,
-                                onValueChange = {
-                                    locationFilterState.value = it
-                                    onLocationFilterUpdate(locationFilterState.value)
-                                },
-                                label = {
-                                    Text(text = "Lokasi")
-                                },
-                                placeholder = {
-                                    Text(text = "e.g. Bandung")
-                                },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .onFocusChanged {
-                                        Handler(Looper.getMainLooper()).postDelayed({
-                                            hasFocus = it.hasFocus
-                                        }, 1500)
-                                    }
-                                    .scale(0.8f),
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    focusedBorderColor = MaterialTheme.colors.onBackground,
-                                    unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(
-                                        ContentAlpha.high
+                            Column(
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                // Location Filter
+                                OutlinedTextField(
+                                    value = locationFilterState.value,
+                                    onValueChange = {
+                                        locationFilterState.value = it
+                                        onLocationFilterUpdate(locationFilterState.value)
+                                    },
+                                    label = {
+                                        Text(text = "Lokasi")
+                                    },
+                                    placeholder = {
+                                        Text(text = "e.g. Bandung")
+                                    },
+                                    singleLine = true,
+                                    modifier = Modifier
+                                        .onFocusChanged {
+                                            Handler(Looper.getMainLooper()).postDelayed({
+                                                hasFocus = it.hasFocus
+                                            }, 1500)
+                                        }
+                                        .scale(0.8f),
+                                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                                        focusedBorderColor = MaterialTheme.colors.onBackground,
+                                        unfocusedBorderColor = MaterialTheme.colors.onBackground.copy(
+                                            ContentAlpha.high
+                                        ),
+                                        cursorColor = MaterialTheme.colors.onBackground
                                     ),
-                                    cursorColor = MaterialTheme.colors.onBackground
-                                ),
-                                shape = RoundedCornerShape(32.dp)
-                            )
+                                    shape = RoundedCornerShape(32.dp)
+                                )
 
-                            BackHandler(hasFocus && keyboardState == Keyboard.Closed) {
-                                focusManager.clearFocus()
-                                hasFocus = false
-                            }
-
-                            // Fee Filter
-                            var displayFeeRange: String by remember { mutableStateOf("All Ranges") }
-                            // Fee Range Opener
-                            Row(
-                                Modifier.fillMaxWidth()
-                            ) {
+                                BackHandler(hasFocus && keyboardState == Keyboard.Closed) {
+                                    focusManager.clearFocus()
+                                    hasFocus = false
+                                }
+                                Spacer(Modifier.height(16.dp))
+                                // Fee Filter
+                                var displayFeeRange: String by remember { mutableStateOf("All Ranges") }
+                                // Fee Range Opener
                                 Text(
-                                    text = displayFeeRange,
-                                    modifier = Modifier
-                                        .border(
-                                            width = 1.dp,
-                                            color = MaterialTheme.colors.onBackground,
-                                            shape = RoundedCornerShape(16.dp)
-                                        )
-                                        .padding(horizontal = 8.dp, vertical = 5.dp),
-                                    color = MaterialTheme.colors.onBackground
+                                    text = "Rentang Biaya",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
                                 )
-                                Icon(
-                                    imageVector =
-                                    if (!feeFilterDropdownExpanded) Icons.Default.ArrowDropDown
-                                    else Icons.Default.KeyboardArrowUp,
-                                    modifier = Modifier
-                                        .clickable(onClick = {
-                                            feeFilterDropdownExpanded = true
-                                        }),
-                                    contentDescription = "Open Fee Range Options"
-                                )
-                            }
-                            // Options
-                            DropdownMenu(
-                                expanded = feeFilterDropdownExpanded,
-                                onDismissRequest = {
-                                    feeFilterDropdownExpanded = false
-                                },
-                            ) {
-                                feeRanges.forEach { feeRange ->
-                                    val bottomLimit =
-                                        if (feeRange.bottomLimit < 1_000_000)
-                                            "${feeRange.bottomLimit / 1000}K"
-                                        else
-                                            "${feeRange.bottomLimit / 1_000_000}Jt"
-                                    val topLimit =
-                                        if (feeRange.topLimit < 1_000_000)
-                                            "${feeRange.topLimit / 1000}K"
-                                        else
-                                            "${feeRange.topLimit / 1_000_000}Jt"
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            onFeeFilterUpdate(feeRange)
-                                            feeFilterDropdownExpanded = false
-                                            displayFeeRange = "$bottomLimit - $topLimit"
-                                        }) {
+                                Row(
+                                    Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = displayFeeRange,
+                                        modifier = Modifier
+                                            .border(
+                                                width = 1.dp,
+                                                color = MaterialTheme.colors.onBackground,
+                                                shape = RoundedCornerShape(16.dp)
+                                            )
+                                            .padding(horizontal = 8.dp, vertical = 5.dp),
+                                        color = MaterialTheme.colors.onBackground
+                                    )
+                                    Icon(
+                                        imageVector =
+                                        if (!feeFilterDropdownExpanded) Icons.Default.ArrowDropDown
+                                        else Icons.Default.KeyboardArrowUp,
+                                        modifier = Modifier
+                                            .clickable(onClick = {
+                                                feeFilterDropdownExpanded = true
+                                            }),
+                                        contentDescription = "Open Fee Range Options"
+                                    )
+                                }
+                                // Options
+                                DropdownMenu(
+                                    expanded = feeFilterDropdownExpanded,
+                                    onDismissRequest = {
+                                        feeFilterDropdownExpanded = false
+                                    },
+                                ) {
+                                    feeRanges.forEach { feeRange ->
+                                        val bottomLimit =
+                                            if (feeRange.bottomLimit < 1_000_000)
+                                                "${feeRange.bottomLimit / 1000}K"
+                                            else
+                                                "${feeRange.bottomLimit / 1_000_000}Jt"
+                                        val topLimit =
+                                            if (feeRange.topLimit < 1_000_000)
+                                                "${feeRange.topLimit / 1000}K"
+                                            else
+                                                "${feeRange.topLimit / 1_000_000}Jt"
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                onFeeFilterUpdate(feeRange)
+                                                feeFilterDropdownExpanded = false
+                                                displayFeeRange = "$bottomLimit - $topLimit"
+                                            }) {
 
+                                            Text(
+                                                text =
+                                                if (feeRange.topLimit > 0) "$bottomLimit - $topLimit"
+                                                else "All Ranges"
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            //online or offline filter update
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                val options = listOf("Semua", "Online", "Offline")
+                                var selectedItem by remember { mutableStateOf(options[0]) }
+                                options.forEach { label ->
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(56.dp)
+                                            .selectable(
+                                                selected = (selectedItem == label),
+                                                onClick = {
+                                                    selectedItem = label
+                                                    when (label) {
+                                                        options[0] -> {
+                                                            onOnlineOfflineFilterUpdate(
+                                                                OnlineOrOffline.All
+                                                            )
+                                                        }
+                                                        options[1] -> {
+                                                            onOnlineOfflineFilterUpdate(
+                                                                OnlineOrOffline.Online
+                                                            )
+                                                        }
+                                                        options[2] -> {
+                                                            onOnlineOfflineFilterUpdate(
+                                                                OnlineOrOffline.Offline
+                                                            )
+                                                        }
+                                                    }
+                                                },
+                                                role = Role.RadioButton
+                                            )
+                                            .padding(horizontal = 16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = (selectedItem == label),
+                                            onClick = null
+                                        )
                                         Text(
-                                            text =
-                                            if (feeRange.topLimit > 0) "$bottomLimit - $topLimit"
-                                            else "All Ranges"
+                                            text = label
                                         )
                                     }
                                 }
                             }
                         }
-                        //online or offline filter update
-                        Column() {
-                            /* TODO */
-                        }
                     }
-                }
-            },
-            sheetPeekHeight = 72.dp,
-            sheetGesturesEnabled = true,
-            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            backgroundColor = Transparent,
-        ) {
-            Void()
+                },
+                sheetPeekHeight = 86.dp,
+                sheetGesturesEnabled = true,
+                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                backgroundColor = Transparent,
+            ) {
+                Void()
+            }
         }
     }
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun FilterSheetOpener(scope: CoroutineScope, state: BottomSheetScaffoldState) {
+    private fun FilterSheetOpener(scope: CoroutineScope, state: BottomSheetScaffoldState, onOpen:() -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -839,6 +890,7 @@ class MainActivity : AppCompatActivity() {
                 onClick = {
                     scope.launch {
                         state.bottomSheetState.expand()
+                        onOpen()
                     }
                 },
             ) {

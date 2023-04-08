@@ -28,8 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yudhis.studyhive.data.coursesDataset
-import com.yudhis.studyhive.data.coursesGenerated
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.yudhis.studyhive.data.saveUserData
 import com.yudhis.studyhive.data.userData
 import com.yudhis.studyhive.dataclass.Course
 import com.yudhis.studyhive.dataclass.Participant
@@ -211,15 +213,15 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                                     ) {
                                         val newId = getNewId()
                                         val newParticipant = Participant(
-                                            pName = pFullName,
-                                            pNickName = pNickName,
-                                            address = pAddress,
+                                            pName = nameState.value.text,
+                                            pNickName = nickNameState.value.text,
+                                            pAddress = addressState.value.text,
                                             pPic = pPic,
-                                            birthdate = pBirthDate,
+                                            pBirthdate = birthDateState.value.text,
                                             pId = newId,
                                             skd = skd,
                                             sktm = sktm,
-                                            course_history = courses
+                                            courseHistory = courses
                                         )
                                         userData.participants[newId] = newParticipant
                                         startActivity(
@@ -228,6 +230,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                                                 ParticipantListActivity::class.java
                                             )
                                         )
+                                        finish()
+                                        saveUserData()
                                     }
                                     else {
                                         showExitEditingDialog = false

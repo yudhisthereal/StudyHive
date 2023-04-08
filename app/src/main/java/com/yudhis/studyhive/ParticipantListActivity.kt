@@ -27,6 +27,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.yudhis.studyhive.data.saveUserData
 import com.yudhis.studyhive.data.userData
 import com.yudhis.studyhive.dataclass.MAX_PARTICIPANTS
 import com.yudhis.studyhive.dataclass.Participant
@@ -103,6 +107,7 @@ class ParticipantListActivity : ComponentActivity() {
                                     Button(
                                         onClick = {
                                             startActivity(Intent(context, ParticipantRegistrationActivity::class.java))
+                                            saveUserData()
                                             finish()
                                         },
                                         shape = RoundedCornerShape(32.dp)
