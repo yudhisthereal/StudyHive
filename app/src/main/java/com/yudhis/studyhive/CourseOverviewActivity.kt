@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.compose.ui.graphics.Color
 import com.yudhis.studyhive.databinding.ActivityMainBinding
 
 class CourseOverviewActivity : AppCompatActivity() {
