@@ -4,9 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.yudhis.studyhive.data.userData
 
 class RegistrationTicketActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,12 +37,17 @@ class RegistrationTicketActivity : AppCompatActivity() {
         //mengatur tombol seleseai agar ketika ditekan menuju ke main activity dan membawa data title, startdate dan enddate
         val btnSelesai = findViewById<Button>(R.id.bt_selesai)
         btnSelesai.setOnClickListener {
-            Intent(this, MainActivity::class.java).also {
-                it.putExtra("course_title", title)
-                it.putExtra("course_startDate", startDate)
-                it.putExtra("course_endDate", endDate)
-                startActivity(it)
-            }
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("course_title", title)
+            intent.putExtra("course_startDate", startDate)
+            intent.putExtra("course_endDate", endDate)
+            startActivity(intent)
+        }
+
+        val checkedNicknames = intent.getStringArrayListExtra("checked_nicknames")
+        val nicknamesTextView = findViewById<TextView>(R.id.partisipan1)
+        nicknamesTextView.text = checkedNicknames?.joinToString("\n")
+
         }
     }
-}

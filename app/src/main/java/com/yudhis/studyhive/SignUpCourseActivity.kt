@@ -40,17 +40,25 @@ class SignUpCourseActivity : AppCompatActivity() {
         val endDate = intent.getStringExtra("course_endDate")
         tvEndDate.text = endDate
 
+
+
+
         //mengatur tombol buat tiket agar ketika ditekan menuju ke regristtration ticket activty dan membawa data title,startdate dan enddate
         val btnBuatTiket = findViewById<Button>(R.id.bt_buat_tiket)
         btnBuatTiket.setOnClickListener {
-            Intent(this, RegistrationTicketActivity::class.java).also {
-                it.putExtra("course_title", title)
-                it.putExtra("course_startDate", startDate)
-                it.putExtra("course_endDate", endDate)
-                startActivity(it)
+            val intent = Intent(this, RegistrationTicketActivity::class.java)
+            val checkedNicknames = mutableListOf<String>()
+
+            for (checkbox in checkboxes) {
+                if (checkbox.isChecked) {
+                    checkedNicknames.add(checkbox.text.toString())
+                }
+            }
+                intent.putExtra("course_title", title)
+                intent.putExtra("course_startDate", startDate)
+                intent.putExtra("course_endDate", endDate)
+                intent.putStringArrayListExtra("checked_nicknames", ArrayList(checkedNicknames))
+                startActivity(intent)
             }
         }
     }
-
-
-}
