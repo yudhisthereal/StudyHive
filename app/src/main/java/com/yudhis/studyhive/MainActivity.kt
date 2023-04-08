@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,15 +14,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,27 +44,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.PopupProperties
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.yudhis.studyhive.composeables.*
-import com.yudhis.studyhive.data.coursesDataset
-import com.yudhis.studyhive.data.filteredData
-import com.yudhis.studyhive.dataclass.MenuItem
-import com.yudhis.studyhive.ui.theme.StudyHiveTheme
-import com.yudhis.studyhive.ui.theme.Transparent
+import com.yudhis.studyhive.data.*
 import com.yudhis.studyhive.dataclass.*
 import com.yudhis.studyhive.tools.randomColor
 import com.yudhis.studyhive.tools.randomCourseCategory
 import com.yudhis.studyhive.ui.theme.Gray500
+import com.yudhis.studyhive.ui.theme.StudyHiveTheme
+import com.yudhis.studyhive.ui.theme.Transparent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.text.substringBefore
-import androidx.fragment.app.FragmentManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _auth: FirebaseAuth
@@ -78,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         val user = _auth.currentUser
         val gsc = GoogleSignIn.getClient(this@MainActivity, GoogleSignInOptions.DEFAULT_SIGN_IN)
         setContent {
-            GenerateDummyCourses()
+            if (!coursesGenerated) GenerateDummyCourses()
             _courses = coursesDataset
             StudyHiveTheme {
                 Box {
@@ -87,6 +80,9 @@ class MainActivity : AppCompatActivity() {
                     var logoutConfOpen by remember {
                         mutableStateOf(false)
                     }
+
+                    //create dummy participants for this session
+                    if (!participantsGenerated) userData.participants = dummyParticipants()
 
                     Scaffold(
                         scaffoldState = scaffoldState,
@@ -98,7 +94,8 @@ class MainActivity : AppCompatActivity() {
                                 },
                                 onNavigate = {
                                     coroutineScope.launch { scaffoldState.drawerState.close() }
-                                }
+                                },
+                                user = user as FirebaseUser
                             )
                         },
                     ) { padding ->
@@ -124,6 +121,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun GenerateDummyCourses() {
+        coursesGenerated = true
         val courses = mutableSetOf<Course>()
         val titles = setOf(
             "Cyber Security Basics",
@@ -271,7 +269,7 @@ class MainActivity : AppCompatActivity() {
         searchState: MutableState<TextFieldValue>
     ) {
         var searchQuery by remember { mutableStateOf("") }
-        val context = LocalContext.current
+//        val context = LocalContext.current
         var isSearching by remember { mutableStateOf(false) }
         var categoryFilter by remember { mutableStateOf(CourseCategory.All) }
         val locationFilterState = remember { mutableStateOf(TextFieldValue("")) }
@@ -494,7 +492,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun Greeting(user: FirebaseUser?) {
+    private fun Greeting(user: FirebaseUser?) {
 
         Text(
             text = "Welcome,",
@@ -513,7 +511,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainAppBar(coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
+    private fun MainAppBar(coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
         AppBar(
             onMenuClicked = {
                 coroutineScope.launch {
@@ -524,7 +522,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun LogoutConfirmation(onDismiss: () -> Unit, gsc: GoogleSignInClient) {
+    private fun LogoutConfirmation(onDismiss: () -> Unit, gsc: GoogleSignInClient) {
         Dialog(
             onDismissRequest = { onDismiss() },
             content = {
@@ -590,8 +588,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun MainDrawerMenu(confirmLogout: () -> Unit, onNavigate: () -> Unit) {
-
+    private fun MainDrawerMenu(confirmLogout: () -> Unit, onNavigate: () -> Unit, user: FirebaseUser) {
+//        DrawerHeader(
+//            profilePic = Icons.Default.Person,
+//            profileName = user.displayName.toString(),
+//            profileEmail = user.email.toString()
+//        )
+        DrawerHeader(
+            profileName = user.displayName as String,
+            profilePic = Icons.Default.Person,
+            profileEmail = user.email as String
+        )
+        HorizontalDivider(MaterialTheme.colors.background)
         DrawerBody(
             items = listOf(
                 MenuItem(
@@ -644,7 +652,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun SectionHeader(text: String, textAlign: TextAlign = TextAlign.Start) {
+    private fun SectionHeader(text: String, textAlign: TextAlign = TextAlign.Start) {
         Text(
             text = text,
             fontSize = 24.sp,
@@ -657,7 +665,7 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
     @Composable
-    fun FilterSheet(
+    private fun FilterSheet(
         onCategoryFilterUpdate: (CourseCategory) -> Unit,
         selectedCategory: CourseCategory?,
         locationFilterState: MutableState<TextFieldValue>,
@@ -827,6 +835,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun FilterSheetOpener(scope: CoroutineScope, state: BottomSheetScaffoldState) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                onClick = {
+                    scope.launch {
+                        state.bottomSheetState.expand()
+                    }
+                },
+            ) {
+                Text(text = "Filter")
+            }
+        }
+    }
 
     @Composable
     fun TagButton(category: CourseCategory, onClick: () -> Unit, selected: Boolean = false) {
@@ -863,77 +892,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    fun FilterSheetOpener(scope: CoroutineScope, state: BottomSheetScaffoldState) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(Transparent),
-            contentAlignment = Alignment.Center
-        ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        state.bottomSheetState.expand()
-                    }
-                },
-            ) {
-                Text(text = "Filter")
-            }
-        }
-    }
-
     @Composable
     fun Void() {
         Text("")
     }
 
-    //    @Preview(showBackground = true)
-    @Composable
-    fun AppPreview() {
-        Surface(
-            elevation = 4.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .padding(32.dp),
-            color = MaterialTheme.colors.onPrimary
-        ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(
-                    text = "Keluar dari StudyHive?"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
-                        onClick = {},
-                    )
-                    {
-                        Text(text = "Ya", color = MaterialTheme.colors.onPrimary)
-                    }
-                    Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.onPrimary),
-                        onClick = {
-
-                        }
-                    )
-                    {
-                        Text(text = "Tidak", color = MaterialTheme.colors.primary)
-                    }
-                }
-            }
-        }
-    }
+//    @Preview(showBackground = true)
+//    @Composable
+//    fun AppPreview() {
+//        Surface(
+//            elevation = 4.dp,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clip(RoundedCornerShape(16.dp))
+//                .padding(32.dp),
+//            color = MaterialTheme.colors.onPrimary
+//        ) {
+//            Column(
+//                verticalArrangement = Arrangement.SpaceAround,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//
+//                Text(
+//                    text = "Keluar dari StudyHive?"
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Row(
+//                    horizontalArrangement = Arrangement.SpaceAround,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Button(
+//                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
+//                        onClick = {},
+//                    )
+//                    {
+//                        Text(text = "Ya", color = MaterialTheme.colors.onPrimary)
+//                    }
+//                    Button(
+//                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.onPrimary),
+//                        onClick = {
+//
+//                        }
+//                    )
+//                    {
+//                        Text(text = "Tidak", color = MaterialTheme.colors.primary)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @Preview(showBackground = true)
     @OptIn(ExperimentalLayoutApi::class)
@@ -1054,6 +1061,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun MenuPreview() {
+        DrawerHeader(
+            profilePic = Icons.Default.Person,
+            profileName = "User 404",
+            profileEmail = "email@yahoo.com"
+        )
     }
 }
 

@@ -1,12 +1,13 @@
 package com.yudhis.studyhive.data
 
-import com.yudhis.studyhive.dataclass.Course
-import com.yudhis.studyhive.dataclass.CourseCategory
-import com.yudhis.studyhive.dataclass.FeeRange
-import com.yudhis.studyhive.dataclass.OnlineOrOffline
-
+import com.google.firebase.firestore.auth.User
+import com.yudhis.studyhive.dataclass.*
+var coursesGenerated = false
+var participantsGenerated = false
 var coursesDataset: MutableSet<Course> = mutableSetOf()
-
+var userData: UserData = UserData(
+    participants = mutableMapOf()
+)
 fun filteredData(query:String, category:CourseCategory, location:String, feeRange: FeeRange, onlineOrOffline: OnlineOrOffline): Set<Course> {
     return coursesDataset.filter {
         (it.title.contains(query.trim(), ignoreCase = true) || query.isBlank())

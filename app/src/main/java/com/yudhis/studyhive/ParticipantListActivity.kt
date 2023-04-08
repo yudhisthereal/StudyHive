@@ -1,7 +1,6 @@
 package com.yudhis.studyhive
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,18 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import com.yudhis.studyhive.dataclass.Course
+import com.yudhis.studyhive.data.userData
+import com.yudhis.studyhive.dataclass.MAX_PARTICIPANTS
 import com.yudhis.studyhive.dataclass.Participant
+import com.yudhis.studyhive.dataclass.editedParticipantId
+import com.yudhis.studyhive.ui.theme.Gray300
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 
 class ParticipantListActivity : ComponentActivity() {
@@ -42,7 +40,6 @@ class ParticipantListActivity : ComponentActivity() {
         setContent {
             StudyHiveTheme {
                 val context = LocalContext.current.applicationContext
-                val participants = dummyParticipants()
                 // Outer Column
                 Column(
                     modifier = Modifier
@@ -73,68 +70,92 @@ class ParticipantListActivity : ComponentActivity() {
                                 .padding(24.dp)
                         ) {
                             // Content
-                            LazyColumn(
-                                modifier = Modifier.fillMaxWidth()
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.End
                             ) {
                                 // The List
-                                item {
-                                    Column(
-                                        horizontalAlignment = Alignment.End
-                                    ) {
-                                        for (participant in participants) {
-                                            ParticipantListItem(
-                                                participantData = participant,
-                                                onClick = {
-                                                    val intent = Intent(context, ParticipantDetailActivity::class.java)
-                                                    startActivity(intent)
-                                                }
+                                var i  = 0
+                                for (participant in userData.participants.values) {
+                                    i++
+                                    ParticipantListItem(
+                                        participantData = participant,
+                                        onDetailClick = { pId ->
+                                            editedParticipantId = pId
+                                            val intent = Intent(
+                                                context,
+                                                ParticipantDetailActivity::class.java
                                             )
-                                            Spacer(Modifier.height(10.dp))
+                                            startActivity(intent)
+                                            finish()
+                                        },
+                                        onDeleteClick = { pId ->
+                                            userData.participants.remove(pId)
+                                            startActivity(Intent(context, ParticipantListActivity::class.java))
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                            finish()
+                                            // Toast.makeText(context, "pId: $pId, exists? ${userData.participants.keys.contains(pId)}", Toast.LENGTH_LONG).show()
                                         }
-                                        Spacer(Modifier.height(16.dp))
-
-                                        // Add Button
-                                        Button(
-                                            onClick = {},
-                                            shape = RoundedCornerShape(32.dp)
-                                        ) {
-                                            Text(text = "Tambah Partisipan")
-                                        }
+                                    )
+                                    Spacer(Modifier.height(10.dp))
+                                }
+                                Spacer(Modifier.height(16.dp))
+                                // Add Button
+                                if (userData.participants.size < MAX_PARTICIPANTS) {
+                                    Button(
+                                        onClick = {
+                                            startActivity(Intent(context, ParticipantRegistrationActivity::class.java))
+                                            finish()
+                                        },
+                                        shape = RoundedCornerShape(32.dp)
+                                    ) {
+                                        Text(text = "Tambah Partisipan")
+                                    }
+                                }
+                                if (userData.participants.isEmpty()) {
+                                    Column(
+                                        modifier = Modifier.fillMaxSize(),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "Anda Belum Memiliki Partisipan.",
+                                            fontSize = 32.sp,
+                                            color = Gray300,
+                                        )
                                     }
                                 }
                                 // Back and Save Buttons
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxSize(),
-                                        verticalAlignment = Alignment.Bottom,
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    verticalAlignment = Alignment.Bottom,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    //Back Button
+                                    Button(
+                                        onClick = {
+                                            val intent =
+                                                Intent(context, MainActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        },
+                                        shape = RoundedCornerShape(32.dp),
+                                        colors = ButtonDefaults
+                                            .buttonColors(
+                                                backgroundColor = MaterialTheme.colors.background,
+                                                contentColor = MaterialTheme.colors.onBackground
+                                            )
                                     ) {
-                                        //Back Button
-                                        Button(
-                                            onClick = {
-                                                val intent =
-                                                    Intent(context, MainActivity::class.java)
-                                                startActivity(intent)
-                                                finish()
-                                            },
-                                            shape = RoundedCornerShape(32.dp),
-                                            colors = ButtonDefaults
-                                                .buttonColors(
-                                                    backgroundColor = MaterialTheme.colors.background,
-                                                    contentColor = MaterialTheme.colors.onBackground
-                                                )
-                                        ) {
-                                            Text(text = "Kembali")
-                                        }
-                                        Spacer(Modifier.width(8.dp))
-                                        //Save Button
-                                        Button(
-                                            onClick = {},
-                                            shape = RoundedCornerShape(32.dp)
-                                        ) {
-                                            Text(text = "Simpan")
-                                        }
+                                        Text(text = "Kembali")
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    //Save Button
+                                    Button(
+                                        onClick = {},
+                                        shape = RoundedCornerShape(32.dp)
+                                    ) {
+                                        Text(text = "Simpan")
                                     }
                                 }
                             }
@@ -146,82 +167,11 @@ class ParticipantListActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun dummyParticipants() : Set<Participant> {
-    return setOf(
-        Participant(
-            pName = "Muhammad Al Azhar",
-            pNickName = "Azhar",
-            pId = "17",
-            pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
-            address = "Permukaan Bumi",
-            birthdate = "17 April 2003",
-            sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
-            skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
-        ),
-        Participant(
-            pName = "Julian",
-            pNickName = "Jul",
-            pId = "23",
-            pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
-            address = "Permukaan Bumi",
-            birthdate = "17 November 2001",
-            sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
-            skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
-        ),
-        Participant(
-            pName = "Laura Cinta",
-            pNickName = "Laura",
-            pId = "05",
-            pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
-            address = "Permukaan Bumi",
-            birthdate = "13 April 2004",
-            sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
-            skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
-        ),
-        Participant(
-            pName = "Doni Setiawan",
-            pNickName = "Doni",
-            pId = "33",
-            pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
-            address = "Permukaan Bumi",
-            birthdate = "23 Juni 2002",
-            sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
-            skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
-        ),
-        Participant(
-            pName = "Bagus Jutawan",
-            pNickName = "Valen",
-            pId = "99",
-            pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
-            address = "Permukaan Bumi",
-            birthdate = "11 September 2003",
-            sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
-            skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
-        )
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
     StudyHiveTheme {
-        val participants = dummyParticipants()
+        val participants = userData.participants
         // Outer Column
         Column(
             modifier = Modifier
@@ -259,11 +209,13 @@ fun Preview() {
                         LazyColumn(
                             horizontalAlignment = Alignment.End
                         ) {
-                            for (participant in participants) {
+                            for (participant in participants.values) {
                                 item {
                                     ParticipantListItem(
                                         participantData = participant,
-                                        onClick = {
+                                        onDetailClick = {
+                                        },
+                                        onDeleteClick = {
                                         }
                                     )
                                     Spacer(Modifier.height(10.dp))
@@ -320,7 +272,8 @@ fun Preview() {
 @Composable
 fun ParticipantListItem(
     participantData: Participant,
-    onClick: () -> Unit
+    onDetailClick: (ID: String) -> Unit,
+    onDeleteClick: (ID: String) -> Unit
 ) {
     val context = LocalContext.current.applicationContext
     val pName = participantData.pName
@@ -368,7 +321,8 @@ fun ParticipantListItem(
                 Text(
                     modifier = Modifier
                         .clickable(onClick = {
-                            onClick()
+                            editedParticipantId = participantData.pId
+                            onDetailClick(participantData.pId)
                         }),
                     text = "Lihat Detail",
                     textDecoration = TextDecoration.Underline,
@@ -385,7 +339,9 @@ fun ParticipantListItem(
                 horizontalArrangement = Arrangement.End
             ) {
                 IconButton(
-                    onClick = {}
+                    onClick = {
+                        onDeleteClick(participantData.pId)
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,

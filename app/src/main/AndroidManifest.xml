@@ -14,6 +14,11 @@
         android:theme="@style/Theme.StudyHive"
         tools:targetApi="31">
         <activity
+            android:name=".ParticipantRegistrationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_participant_registration"
+            android:theme="@style/Theme.StudyHive" />
+        <activity
             android:name=".ParticipantListActivity"
             android:exported="false"
             android:label="@string/title_activity_participant_list"

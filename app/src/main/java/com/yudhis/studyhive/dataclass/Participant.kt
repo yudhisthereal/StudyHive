@@ -4,12 +4,12 @@ import android.media.Image
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class Participant(
-    val pName: String,
-    val pNickName: String,
+    var pName: String,
+    var pNickName: String,
     val pId: String,
-    val pPic: ImageVector,
-    val address: String,
-    val birthdate: String,
+    var pPic: ImageVector,
+    var address: String,
+    var birthdate: String,
     var sktm: ImageVector,
     var skd: ImageVector,
     var course_history: List<Course>
