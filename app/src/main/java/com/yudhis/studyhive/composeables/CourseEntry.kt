@@ -11,7 +11,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yudhis.studyhive.dataclass.Course
-import com.yudhis.studyhive.dataclass.Event
 
 @Composable
 fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
@@ -73,50 +72,50 @@ fun CourseEntry(courseData: Course, onEnrollClicked: (id:String) -> Unit) {
     }
 }
 
-@Composable
-fun EventEntry(eventData: Event, onEnrollClicked: (eventId: String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        RoundCornerImage(
-            painter = eventData.Image,
-            description = "Event Entry titled ${eventData.title}",
-            topStart = 32.dp
-        )
-        Column {
-            // Title
-            Text(
-                text = eventData.title,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            // Description
-            Text(
-                text = eventData.briefDescription,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Light
-            )
-            //Enrollment due date
-            Text(text = "Pendaftaran ditutup pada:")
-            Text(text = eventData.enrollDueDate.toString())
-            // Meta and Enroll Button
-            Row {
-                Text(text = eventData.category.toString())
-                Button(
-                    onClick = {
-                        onEnrollClicked(eventData.title)
-                    }
-                ) {
-                    Text(
-                        text = "Daftar",
-                        fontWeight =  FontWeight.Medium,
-                        fontSize = 16.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
+//@Composable
+//fun EventEntry(eventData: Event, onEnrollClicked: (eventId: String) -> Unit) {
+//    Row(
+//        modifier = Modifier
+//            .padding(16.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween
+//    ) {
+//        RoundCornerImage(
+//            painter = eventData.Image,
+//            description = "Event Entry titled ${eventData.title}",
+//            topStart = 32.dp
+//        )
+//        Column {
+//            // Title
+//            Text(
+//                text = eventData.title,
+//                fontSize = 24.sp,
+//                fontWeight = FontWeight.Bold
+//            )
+//            // Description
+//            Text(
+//                text = eventData.briefDescription,
+//                fontSize = 12.sp,
+//                fontWeight = FontWeight.Light
+//            )
+//            //Enrollment due date
+//            Text(text = "Pendaftaran ditutup pada:")
+//            Text(text = eventData.enrollDueDate.toString())
+//            // Meta and Enroll Button
+//            Row {
+//                Text(text = eventData.category.toString())
+//                Button(
+//                    onClick = {
+//                        onEnrollClicked(eventData.title)
+//                    }
+//                ) {
+//                    Text(
+//                        text = "Daftar",
+//                        fontWeight =  FontWeight.Medium,
+//                        fontSize = 16.sp
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//

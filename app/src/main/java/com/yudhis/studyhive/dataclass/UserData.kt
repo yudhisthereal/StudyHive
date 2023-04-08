@@ -3,6 +3,7 @@ package com.yudhis.studyhive.dataclass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import com.yudhis.studyhive.DummyCourses
 import com.yudhis.studyhive.R
 import com.yudhis.studyhive.data.participantsGenerated
 import com.yudhis.studyhive.data.userData
@@ -10,7 +11,7 @@ import com.yudhis.studyhive.data.userData
 data class UserData(
     var participants: MutableMap<String, Participant>,
 )
-var editedParticipantId = ""
+var selectedParticipantID = ""
 val MAX_PARTICIPANTS = 5
 @Composable
 fun dummyParticipants() : MutableMap<String, Participant> {
@@ -25,9 +26,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
             birthdate = "17 April 2003",
             sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
             skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
+            course_history = DummyCourses(9)
         ),
         "2" to Participant(
             pName = "Julian",
@@ -38,9 +37,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
             birthdate = "17 November 2001",
             sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
             skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
+            course_history = DummyCourses(7)
         ),
         "3" to Participant(
             pName = "Doni Setiawan",
@@ -51,9 +48,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
             birthdate = "23 Juni 2002",
             sktm = ImageVector.vectorResource(id = R.drawable.ic_file),
             skd = ImageVector.vectorResource(id = R.drawable.ic_file),
-            course_history = listOf(
-                // HELPPPP
-            )
+            course_history = DummyCourses(5)
         )
     )
 }

@@ -16,26 +16,28 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yudhis.studyhive.data.coursesDataset
+import com.yudhis.studyhive.data.coursesGenerated
 import com.yudhis.studyhive.data.userData
+import com.yudhis.studyhive.dataclass.Course
 import com.yudhis.studyhive.dataclass.Participant
 import com.yudhis.studyhive.dataclass.getNewId
+import com.yudhis.studyhive.tools.randomColor
+import com.yudhis.studyhive.tools.randomCourseCategory
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
+import java.util.*
 
 class ParticipantRegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -193,7 +195,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                     // Confirm exit editing dialog
                     if (showExitEditingDialog) {
                         val pPic = ImageVector.vectorResource(id = R.drawable.ic_person)
-                        confirmExitEditing(
+                        val courses = DummyCourses()
+                        ConfirmExitEditing(
                             onDissmissRequest = {
                                 showExitEditingDialog = false
                             },
@@ -216,7 +219,7 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                                             pId = newId,
                                             skd = skd,
                                             sktm = sktm,
-                                            course_history = listOf()
+                                            course_history = courses
                                         )
                                         userData.participants[newId] = newParticipant
                                         startActivity(
@@ -246,4 +249,145 @@ class ParticipantRegistrationActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun DummyCourses(count:Int = 11): MutableList<Course> {
+    val courses = mutableListOf<Course>()
+    val titles = setOf(
+        "Cyber Security Basics",
+        "Linux Full Guide",
+        "Wordpress Masterclass",
+        "Game Development with Godot Engine",
+        "Unreal Engine 101",
+        "Ethical Hacking"
+    )
+    val locations = setOf(
+        "Bandung",
+        "Malang",
+        "Bekasi",
+        "Jakarta",
+        "Bogor",
+        "Padang",
+        "Denpasar",
+        "Pontianak"
+    )
+
+    val startDate = setOf(
+        "1 Januari 2023",
+        "2 februari 2023",
+        "3 Maret 2023",
+        "4 April 2023",
+        "5 Mei 2023",
+        "6 Juni 2023"
+    )
+
+    val endDate = setOf(
+        "1 Juli 2023",
+        "2 Agustus 2023",
+        "3 September 2023",
+        "4 Oktober 2023",
+        "5 November 2023",
+        "6 Desember 2023"
+    )
+
+    val rating = Random().nextFloat() * (5.0f - 1.0f) + 1.0f
+
+    val courseDescriptions = mapOf(
+        "Cyber Security Basics" to "This course will cover the basics of cyber security and help you become familiar with different types of cyber attacks and how to protect yourself against them.",
+        "Linux Full Guide" to "This course is a comprehensive guide to using the Linux operating system, from the basics of installation and configuration to advanced topics like network administration and server management.",
+        "Wordpress Masterclass" to "In this masterclass, you will learn everything you need to know to create beautiful and functional websites using WordPress, the world's most popular content management system.",
+        "Game Development with Godot Engine" to "If you've ever wanted to make your own video games, this course is for you. You'll learn how to use the Godot game engine to create 2D and 3D games from scratch, even if you have no prior experience with programming or game development.",
+        "Unreal Engine 101" to "Unreal Engine is one of the most popular game engines in the world, used by professional game developers to create blockbuster titles. In this course, you'll learn the basics of game development with Unreal Engine and create your own games.",
+        "Ethical Hacking" to "This course will teach you how to use ethical hacking techniques to identify and exploit vulnerabilities in computer systems and networks. You'll learn how to use tools like Kali Linux and Metasploit to perform penetration testing and secure your own systems."
+    )
+
+    val pembicara1 = listOf(
+        "Bill Gates",
+        "Mark zuckeberg",
+        "Elon Musk",
+        "Ada Lovelace",
+        "Grace Hopper",
+        "Guido van Rossum"
+    )
+    val pembicara2 = listOf(
+        "Tim Berners-Lee",
+        "James Gosling",
+        "Ken Thompson",
+        "Larry Page",
+        "Barack Obama",
+        "Donald Trump"
+    )
+
+    val contentsMap = mapOf(
+        "Cyber Security Basics" to listOf(
+            "-Konsep dasar keamanan siber",
+            "-Metode serangan umum seperti phishing, malware, dan serangan DoS",
+            "-Teknik enkripsi dan dekripsi",
+            "-Keamanan jaringan dan sistem operasi",
+            "-Penanganan insiden keamanan"
+        ),
+        "Linux Full Guide" to listOf(
+            "-Pemahaman dasar tentang sistem operasi Linux",
+            "-Cara menginstall dan mengkonfigurasi sistem Linux",
+            "-Penggunaan perintah terminal dan file manager",
+            "-Manajemen paket dan dependensi",
+            "-Konfigurasi jaringan dan firewall"
+        ),
+        "Wordpress Masterclass" to listOf(
+            "-Konsep dasar tentang Wordpress sebagai platform CMS",
+            "-Cara menginstall Wordpress pada server",
+            "-Penggunaan tema dan plugin pada Wordpress",
+            "-Konfigurasi dasar pada Wordpress seperti halaman, posting, dan widget",
+            "-Optimalisasi SEO untuk website menggunakan Wordpress"
+        ),
+        "Game Development with Godot Engine" to listOf(
+            "-Pemahaman tentang pengembangan game",
+            "-Penggunaan Godot Engine sebagai framework pengembangan game",
+            "-Pembuatan game mechanic, scene, dan asset",
+            "-Pemrograman game dengan GDScript",
+            "-Optimalisasi performa dan debugging"
+        ),
+        "Unreal Engine 101" to listOf(
+            "-Pengenalan Unreal Engine dan konsep game development",
+            "-Pembuatan environment dan asset game",
+            "-Pemrograman gameplay dengan Blueprints visual scripting",
+            "-Pemrograman gameplay dengan C++",
+            "-Optimasi performa dan debugging"
+        ),
+        "Ethical Hacking" to listOf(
+            "-Pengenalan tentang hacking dan serangan siber",
+            "-Penggunaan tools hacking seperti Kali Linux",
+            "-Metode pengujian keamanan untuk aplikasi dan jaringan",
+            "-Pemahaman tentang exploit dan teknik social engineering",
+            "-Prinsip-prinsip etika dalam melakukan hacking"
+        )
+    )
+
+    for (i in 1 until count) {
+        val title = titles.elementAt(Random().nextInt(titles.size)) + " ID $i"
+        val fullDescription = courseDescriptions[title.substringBefore(" ID")] ?: ""
+        val contents = contentsMap[title.substringBefore(" ID")] ?: emptyList()
+        val location = locations.elementAt(Random().nextInt(locations.size))
+
+        courses.add(
+            Course(
+                title = title,
+                briefDescription = "Hi! What's up? Oh you wanna strike a job offer but not too sure about your skills? Well, you might want to consider enrolling this course, NOW!",
+                fullDescription = fullDescription,
+                image = painterResource(id = R.drawable.img_course_demo_256),
+                tint = randomColor(),
+                category = randomCourseCategory(),
+                rating = rating,
+                fee = Random().nextInt(1_000_000),
+                location = location,
+                startDate = startDate.elementAt(Random().nextInt(startDate.size)),
+                endDate = endDate.elementAt(Random().nextInt(endDate.size)),
+                pembicara1 = pembicara1[Random().nextInt(pembicara1.size)],
+                pembicara2 = pembicara2[Random().nextInt(pembicara2.size)],
+                courseContents = contents.joinToString("\n")
+            )
+        )
+    }
+    return courses
 }

@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun GenerateDummyCourses() {
+    fun GenerateDummyCourses(count:Int = 100) {
         coursesGenerated = true
         val courses = mutableSetOf<Course>()
         val titles = setOf(
@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        for (i in 1 until 127) {
+        for (i in 1 until count) {
             val title = titles.elementAt(Random().nextInt(titles.size)) + " ID $i"
             val fullDescription = courseDescriptions[title.substringBefore(" ID")] ?: ""
             val contents = contentsMap[title.substringBefore(" ID")] ?: emptyList()
@@ -258,7 +258,6 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
-
         coursesDataset = courses
     }
 
@@ -615,12 +614,6 @@ class MainActivity : AppCompatActivity() {
                     icon = ImageVector.vectorResource(id = R.drawable.ic_people)
                 ),
                 MenuItem(
-                    id = "course_history",
-                    text = "Riwayat Pelatihan",
-                    description = "Courses You've Taken",
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_history)
-                ),
-                MenuItem(
                     id = "logout",
                     text = "Keluar",
                     description = "Sign out from StudyHive",
@@ -639,9 +632,6 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this, ParticipantListActivity::class.java)
                         startActivity(intent)
                         onNavigate()
-                    }
-                    "course_history" -> {
-                        TODO("not yet implemented: go to courses history activity")
                     }
                     "logout" -> {
                         confirmLogout()
