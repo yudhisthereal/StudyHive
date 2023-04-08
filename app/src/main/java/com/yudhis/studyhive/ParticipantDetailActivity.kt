@@ -4,6 +4,7 @@ package com.yudhis.studyhive
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -20,7 +21,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +44,7 @@ class ParticipantDetailActivity : ComponentActivity() {
 
         setContent {
             StudyHiveTheme{
+                val context = LocalContext.current.applicationContext
                 var isEditing: Boolean by remember { mutableStateOf(false) }
                 var pNickName by remember {mutableStateOf(userData.participants[editedParticipantId]?.pNickName as String)}
                 var pFullName by remember {mutableStateOf(userData.participants[editedParticipantId]?.pName as String)}
@@ -236,6 +240,7 @@ class ParticipantDetailActivity : ComponentActivity() {
                             .background(MaterialTheme.colors.background)
                             .fillMaxSize()
                     ) {
+                        var validate by remember { mutableStateOf(false) }
                         val nameState = remember { mutableStateOf(TextFieldValue(pFullName)) }
                         val nickNameState = remember { mutableStateOf(TextFieldValue(pNickName)) }
                         val addressState = remember { mutableStateOf(TextFieldValue(pAddress)) }
@@ -294,7 +299,8 @@ class ParticipantDetailActivity : ComponentActivity() {
                                 EditableField(
                                     fieldState = nameState,
                                     title = "Nama Lengkap",
-                                    placeholder = "Saddam Husein"
+                                    placeholder = "Saddam Husein",
+                                    validate = validate
                                 )
                             }
                             item { Spacer(Modifier.height(24.dp)) }
@@ -303,7 +309,8 @@ class ParticipantDetailActivity : ComponentActivity() {
                                 EditableField(
                                     fieldState = nickNameState,
                                     title = "Nama Panggilan",
-                                    placeholder = "Husein"
+                                    placeholder = "Husein",
+                                    validate = validate
                                 )
                             }
                             item { Spacer(Modifier.height(24.dp)) }
@@ -312,7 +319,8 @@ class ParticipantDetailActivity : ComponentActivity() {
                                 EditableField(
                                     fieldState = addressState,
                                     title = "Alamat",
-                                    placeholder = "Jalan Belimbing No.47"
+                                    placeholder = "Jalan Belimbing No.47",
+                                    validate = validate
                                 )
                             }
                             item { Spacer(Modifier.height(24.dp)) }
@@ -321,7 +329,8 @@ class ParticipantDetailActivity : ComponentActivity() {
                                 EditableField(
                                     fieldState = birthDateState,
                                     title = "Tanggal Lahir",
-                                    placeholder = "07 Agustus 2003"
+                                    placeholder = "07 Agustus 2003",
+                                    validate = validate
                                 )
                             }
                             item { Spacer(Modifier.height(24.dp)) }
@@ -373,15 +382,29 @@ class ParticipantDetailActivity : ComponentActivity() {
                                 },
                                 saveChanges = {save ->
                                     // Save the data
-                                    if (save) {
-                                        pFullName = nameState.value.text
-                                        pNickName = nickNameState.value.text
-                                        pAddress = addressState.value.text
-                                        pBirthDate = birthDateState.value.text
-                                        userData.participants[editedParticipantId]?.pName = pFullName
-                                        userData.participants[editedParticipantId]?.pNickName = pNickName
-                                        userData.participants[editedParticipantId]?.address = pAddress
-                                        userData.participants[editedParticipantId]?.birthdate = pBirthDate
+                                    if(save) {
+                                        validate = true
+                                        if (nameState.value.text.isNotBlank()
+                                            && nickNameState.value.text.isNotBlank()
+                                            && addressState.value.text.isNotBlank()
+                                            && birthDateState.value.text.isNotBlank()
+                                        ) {
+                                            pFullName = nameState.value.text
+                                            pNickName = nickNameState.value.text
+                                            pAddress = addressState.value.text
+                                            pBirthDate = birthDateState.value.text
+                                            userData.participants[editedParticipantId]?.pName =
+                                                pFullName
+                                            userData.participants[editedParticipantId]?.pNickName =
+                                                pNickName
+                                            userData.participants[editedParticipantId]?.address =
+                                                pAddress
+                                            userData.participants[editedParticipantId]?.birthdate =
+                                                pBirthDate
+                                        }
+                                        else {
+                                            Toast.makeText(context, "Pastikan semua field terisi", Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                     isEditing = false
                                 }
@@ -653,7 +676,8 @@ fun ReadOnlyField(text: String = "Not Specified", title: String = "Not Specified
 fun EditableField(
     title: String,
     placeholder: String,
-    fieldState: MutableState<TextFieldValue>
+    fieldState: MutableState<TextFieldValue>,
+    validate:Boolean = false
 ) {
     Text(
         text = title,
@@ -662,6 +686,13 @@ fun EditableField(
         color = MaterialTheme.colors.onBackground
     )
     Spacer(Modifier.height(7.dp))
+
+    // check errors (validation)
+    var isError = false
+    if (validate) {
+        isError = fieldState.value.text.isBlank()
+    }
+
     OutlinedTextField(
         value = fieldState.value,
         onValueChange = {
@@ -672,7 +703,11 @@ fun EditableField(
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         singleLine = true,
-        textStyle = TextStyle(fontSize = 12.sp)
+        textStyle = TextStyle(fontSize = 12.sp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            errorBorderColor = MaterialTheme.colors.error
+        ),
+        isError = isError
     )
 }
 

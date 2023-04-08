@@ -19,7 +19,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
         "1" to Participant(
             pName = "Muhammad Al Azhar",
             pNickName = "Azhar",
-            pId = "17",
+            pId = "1",
             pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
             address = "Permukaan Bumi",
             birthdate = "17 April 2003",
@@ -32,7 +32,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
         "2" to Participant(
             pName = "Julian",
             pNickName = "Jul",
-            pId = "23",
+            pId = "2",
             pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
             address = "Permukaan Bumi",
             birthdate = "17 November 2001",
@@ -45,7 +45,7 @@ fun dummyParticipants() : MutableMap<String, Participant> {
         "3" to Participant(
             pName = "Doni Setiawan",
             pNickName = "Doni",
-            pId = "33",
+            pId = "3",
             pPic = ImageVector.vectorResource(id = R.drawable.ic_person),
             address = "Permukaan Bumi",
             birthdate = "23 Juni 2002",

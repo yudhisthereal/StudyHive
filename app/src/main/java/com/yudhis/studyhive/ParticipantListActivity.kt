@@ -75,9 +75,7 @@ class ParticipantListActivity : ComponentActivity() {
                                 horizontalAlignment = Alignment.End
                             ) {
                                 // The List
-                                var i  = 0
                                 for (participant in userData.participants.values) {
-                                    i++
                                     ParticipantListItem(
                                         participantData = participant,
                                         onDetailClick = { pId ->
@@ -321,7 +319,6 @@ fun ParticipantListItem(
                 Text(
                     modifier = Modifier
                         .clickable(onClick = {
-                            editedParticipantId = participantData.pId
                             onDetailClick(participantData.pId)
                         }),
                     text = "Lihat Detail",

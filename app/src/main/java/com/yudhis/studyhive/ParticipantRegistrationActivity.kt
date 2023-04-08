@@ -2,6 +2,7 @@ package com.yudhis.studyhive
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -42,6 +43,7 @@ class ParticipantRegistrationActivity : ComponentActivity() {
 
         setContent {
             StudyHiveTheme{
+                var validate by remember {mutableStateOf(false)}
                 val context = LocalContext.current.applicationContext
                 val pNickName by remember {mutableStateOf("")}
                 val pFullName by remember {mutableStateOf("")}
@@ -113,7 +115,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                             EditableField(
                                 fieldState = nameState,
                                 title = "Nama Lengkap",
-                                placeholder = "Saddam Husein"
+                                placeholder = "Saddam Husein",
+                                validate = validate
                             )
                         }
                         item { Spacer(Modifier.height(24.dp)) }
@@ -122,7 +125,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                             EditableField(
                                 fieldState = nickNameState,
                                 title = "Nama Panggilan",
-                                placeholder = "Husein"
+                                placeholder = "Husein",
+                                validate = validate
                             )
                         }
                         item { Spacer(Modifier.height(24.dp)) }
@@ -131,7 +135,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                             EditableField(
                                 fieldState = addressState,
                                 title = "Alamat",
-                                placeholder = "Jalan Belimbing No.47"
+                                placeholder = "Jalan Belimbing No.47",
+                                validate = validate
                             )
                         }
                         item { Spacer(Modifier.height(24.dp)) }
@@ -140,7 +145,8 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                             EditableField(
                                 fieldState = birthDateState,
                                 title = "Tanggal Lahir",
-                                placeholder = "07 Agustus 2003"
+                                placeholder = "07 Agustus 2003",
+                                validate = validate
                             )
                         }
                         item { Spacer(Modifier.height(24.dp)) }
@@ -191,24 +197,48 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                             onDissmissRequest = {
                                 showExitEditingDialog = false
                             },
-                            saveChanges = {save ->
+                            saveChanges = { save ->
                                 // Save the data
-                                val newId = getNewId()
                                 if (save) {
-                                    val newParticipant = Participant(
-                                        pName = pFullName,
-                                        pNickName = pNickName,
-                                        address = pAddress,
-                                        pPic = pPic,
-                                        birthdate = pBirthDate,
-                                        pId = newId,
-                                        skd = skd,
-                                        sktm = sktm,
-                                        course_history = listOf()
-                                    )
-                                    userData.participants[newId] = newParticipant
+                                    validate = true
+                                    if (nameState.value.text.isNotBlank()
+                                        && nickNameState.value.text.isNotBlank()
+                                        && addressState.value.text.isNotBlank()
+                                        && birthDateState.value.text.isNotBlank()
+                                    ) {
+                                        val newId = getNewId()
+                                        val newParticipant = Participant(
+                                            pName = pFullName,
+                                            pNickName = pNickName,
+                                            address = pAddress,
+                                            pPic = pPic,
+                                            birthdate = pBirthDate,
+                                            pId = newId,
+                                            skd = skd,
+                                            sktm = sktm,
+                                            course_history = listOf()
+                                        )
+                                        userData.participants[newId] = newParticipant
+                                        startActivity(
+                                            Intent(
+                                                context,
+                                                ParticipantListActivity::class.java
+                                            )
+                                        )
+                                    }
+                                    else {
+                                        showExitEditingDialog = false
+                                        Toast.makeText(context, "Pastikan semua field terisi", Toast.LENGTH_LONG).show()
+                                    }
                                 }
-                                startActivity(Intent(context, ParticipantListActivity::class.java))
+                                else {
+                                    startActivity(
+                                        Intent(
+                                            context,
+                                            ParticipantListActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         )
                     }
