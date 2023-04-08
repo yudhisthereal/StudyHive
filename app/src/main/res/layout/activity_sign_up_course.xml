@@ -115,50 +115,56 @@
         app:layout_constraintTop_toBottomOf="@id/tv_alamat"/>
 
     <CheckBox
+        android:id="@+id/partisipan1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:checked="false"
+        android:enabled="false"
         android:text="Partisipan1"
-        app:layout_constraintTop_toBottomOf="@id/tv_pilih_partisipan"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_pilih_partisipan" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/partisipan2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:enabled="false"
         android:text="Partisipan2"
-        app:layout_constraintTop_toBottomOf="@id/checkBox"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/partisipan1" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/partisipan3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:enabled="false"
         android:text="Partisipan3"
-        app:layout_constraintTop_toBottomOf="@id/checkBox2"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/partisipan2" />
 
     <CheckBox
-        android:id="@+id/checkBox4"
+        android:id="@+id/partisipan4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:enabled="false"
         android:text="Partisipan4"
-        app:layout_constraintTop_toBottomOf="@id/checkBox3"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/partisipan3" />
 
     <CheckBox
-        android:id="@+id/checkBox5"
+        android:id="@+id/partisipan5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Partisipan5"
-        app:layout_constraintTop_toBottomOf="@id/checkBox4"
         android:layout_marginStart="40dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:enabled="false"
+        android:text="Partisipan5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/partisipan4" />
 
     <Button
         android:id="@+id/bt_buat_tiket"

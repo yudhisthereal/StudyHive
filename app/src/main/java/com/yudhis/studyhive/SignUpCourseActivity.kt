@@ -4,12 +4,28 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
+import com.yudhis.studyhive.data.userData
 
 class SignUpCourseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_course)
+        val checkboxes = listOf<CheckBox>(
+            findViewById<CheckBox>(R.id.partisipan1),
+            findViewById<CheckBox>(R.id.partisipan2),
+            findViewById<CheckBox>(R.id.partisipan3),
+            findViewById<CheckBox>(R.id.partisipan4),
+            findViewById<CheckBox>(R.id.partisipan5)
+        )
+        val participantIds = mutableListOf<String>()
+
+        for((i, participant) in userData.participants.values.withIndex()) {
+            checkboxes[i].text = participant.pNickName
+            checkboxes[i].isEnabled = true
+            participantIds.add(i, participant.pId)
+        }
 
         //menampilkan data dari course overview activity menuju ke sign up course activity
         val tvJudulCourse = findViewById<TextView>(R.id.tv_judulcourse)
