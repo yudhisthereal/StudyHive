@@ -60,7 +60,7 @@ fun loadUserData(): Boolean {
                     val participant = doc[id] as Map<*, *>
                     val pId = participant["pid"].toString()
                     val pName = participant["pname"].toString()
-                    val pNickName = participant["pnickname"].toString()
+                    val pNickName = participant["pnickName"].toString()
                     val pAddress = participant["paddress"].toString()
                     val pBirthdate = participant["pbirthdate"].toString()
                     val pCourseHistory = mutableListOf<Course>()

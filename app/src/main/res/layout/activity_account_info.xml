@@ -11,7 +11,8 @@
         android:layout_height="150dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/round_header">
+        android:background="@drawable/round_header"
+        android:backgroundTint="@color/purple_500">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ci_profil"
@@ -21,7 +22,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@color/cardview_dark_background"/>
+            android:src="@color/grey"/>
 
         <TextView
             android:id="@+id/tv_namalengkap"
@@ -31,7 +32,9 @@
             android:text="Nama Lengkap"
             app:layout_constraintTop_toBottomOf="@id/ci_profil"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -44,14 +47,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="135dp"
-        app:cardBackgroundColor="@color/cardview_dark_background">
+        app:cardBackgroundColor="@color/grey">
 
         <TextView
             android:id="@+id/tv_kembali"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kembali"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:textSize="12sp"/>
     </androidx.cardview.widget.CardView>

@@ -21,7 +21,15 @@ class SignUpCourseActivity : AppCompatActivity() {
         )
         val participantIds = mutableListOf<String>()
 
+//        if (userData.participants.size != 0){
+//            for((i, participant) in userData.participants.values.withIndex()) {
+//                checkboxes[i].text = participant.pNickName
+//                checkboxes[i].isEnabled = true
+//                participantIds.add(i, participant.pId)
+//            }
+//        }
         for((i, participant) in userData.participants.values.withIndex()) {
+            if (participant.pNickName == "null") continue
             checkboxes[i].text = participant.pNickName
             checkboxes[i].isEnabled = true
             participantIds.add(i, participant.pId)
