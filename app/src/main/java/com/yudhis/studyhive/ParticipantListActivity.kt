@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.yudhis.studyhive.data.userData
 import com.yudhis.studyhive.dataclass.MAX_PARTICIPANTS
 import com.yudhis.studyhive.dataclass.Participant
-import com.yudhis.studyhive.dataclass.editedParticipantId
+import com.yudhis.studyhive.dataclass.selectedParticipantID
 import com.yudhis.studyhive.ui.theme.Gray300
 import com.yudhis.studyhive.ui.theme.StudyHiveTheme
 
@@ -79,7 +79,7 @@ class ParticipantListActivity : ComponentActivity() {
                                     ParticipantListItem(
                                         participantData = participant,
                                         onDetailClick = { pId ->
-                                            editedParticipantId = pId
+                                            selectedParticipantID = pId
                                             val intent = Intent(
                                                 context,
                                                 ParticipantDetailActivity::class.java

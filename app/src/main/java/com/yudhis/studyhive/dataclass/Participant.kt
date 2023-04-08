@@ -12,5 +12,5 @@ data class Participant(
     var birthdate: String,
     var sktm: ImageVector,
     var skd: ImageVector,
-    var course_history: List<Course>
+    var course_history: MutableList<Course>
 )
