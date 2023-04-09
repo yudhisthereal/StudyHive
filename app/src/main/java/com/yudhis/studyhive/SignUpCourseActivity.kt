@@ -13,23 +13,15 @@ class SignUpCourseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_course)
         val checkboxes = listOf<CheckBox>(
-            findViewById<CheckBox>(R.id.partisipan1),
-            findViewById<CheckBox>(R.id.partisipan2),
-            findViewById<CheckBox>(R.id.partisipan3),
-            findViewById<CheckBox>(R.id.partisipan4),
-            findViewById<CheckBox>(R.id.partisipan5)
+            findViewById(R.id.partisipan1),
+            findViewById(R.id.partisipan2),
+            findViewById(R.id.partisipan3),
+            findViewById(R.id.partisipan4),
+            findViewById(R.id.partisipan5)
         )
         val participantIds = mutableListOf<String>()
 
-//        if (userData.participants.size != 0){
-//            for((i, participant) in userData.participants.values.withIndex()) {
-//                checkboxes[i].text = participant.pNickName
-//                checkboxes[i].isEnabled = true
-//                participantIds.add(i, participant.pId)
-//            }
-//        }
         for((i, participant) in userData.participants.values.withIndex()) {
-            if (participant.pNickName == "null") continue
             checkboxes[i].text = participant.pNickName
             checkboxes[i].isEnabled = true
             participantIds.add(i, participant.pId)

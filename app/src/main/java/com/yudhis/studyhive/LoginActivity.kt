@@ -25,6 +25,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.yudhis.studyhive.data.loadUserData
 import com.yudhis.studyhive.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {

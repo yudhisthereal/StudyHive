@@ -245,6 +245,7 @@ class ParticipantRegistrationActivity : ComponentActivity() {
                                             ParticipantListActivity::class.java
                                         )
                                     )
+                                    finish()
                                 }
                             }
                         )

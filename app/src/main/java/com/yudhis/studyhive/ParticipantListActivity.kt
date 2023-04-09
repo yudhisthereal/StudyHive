@@ -278,7 +278,7 @@ fun ParticipantListItem(
     onDetailClick: (ID: String) -> Unit,
     onDeleteClick: (ID: String) -> Unit
 ) {
-    val context = LocalContext.current.applicationContext
+//    val context = LocalContext.current.applicationContext
     val pName = participantData.pName
     val pPic = participantData.pPic
     val displayName =

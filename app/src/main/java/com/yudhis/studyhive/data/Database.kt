@@ -32,25 +32,27 @@ fun filteredData(query:String, category:CourseCategory, location:String, feeRang
 }
 
 fun saveUserData() {
-    val id = FirebaseAuth.getInstance().currentUser?.uid as String
+    if (FirebaseAuth.getInstance().currentUser == null) return
+    val id = FirebaseAuth.getInstance().currentUser?.uid.toString()
     val db = Firebase.firestore
     db.collection("userData").document(id)
         .set(userData)
 }
 
 fun saveCourseData() {
+    if (FirebaseAuth.getInstance().currentUser == null) return
     val db = Firebase.firestore
     db.collection("courses").document("courses")
         .set(coursesDataset)
 }
 
 @Composable
-fun loadUserData(): Boolean {
+fun loadUserData() {
+    if (FirebaseAuth.getInstance().currentUser == null) return
     val id = FirebaseAuth.getInstance().currentUser?.uid as String
     val db = Firebase.firestore
     val courseImage = painterResource(id = R.drawable.img_course_demo_256)
     val fileImage =  ImageVector.vectorResource(id = R.drawable.ic_file)
-    var success: Boolean = false
     db.collection("userData").document(id)
         .get()
         .addOnSuccessListener { document ->
@@ -107,8 +109,6 @@ fun loadUserData(): Boolean {
                         skd = fileImage
                     )
                 }
-                success = true
             }
         }
-    return success
 }
